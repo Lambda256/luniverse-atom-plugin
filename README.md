@@ -27,3 +27,7 @@ $ apm link
 
 Atom에서 [Cmd+Shift+P]로 Window: Reload를 한 후에 Packages > Luniverse-Atom-Plugin을 확인
 ```
+
+## Commit Message With Emoji
+* `:sparkles:`(✨): 기능 추가
+* `:card_index:`(📇): 텍스트 수정, typo 해결
