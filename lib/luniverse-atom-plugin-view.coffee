@@ -1,5 +1,3 @@
-url = require 'url'
-
 {CompositeDisposable} = require 'event-kit'
 {TextEditorView, View} = require 'atom-space-pen-views'
 
@@ -7,7 +5,6 @@ LuniverseApiClient = require './luniverse-api-client'
 
 module.exports =
 class LuniverseSignInView extends View
-  token = null
 
   @content: ->
     @div class: 'luniverse-signin-modal overlay from-top padded', =>
