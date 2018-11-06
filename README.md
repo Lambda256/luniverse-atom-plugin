@@ -29,5 +29,6 @@ Atom에서 [Cmd+Shift+P]로 Window: Reload를 한 후에 Packages > Luniverse-At
 ```
 
 ## Commit Message With Emoji
-* `:sparkles:`(✨): 기능 추가
-* `:card_index:`(📇): 텍스트 수정, typo 해결
+* `:sparkles:`(:sparkles:): 기능 추가
+* `:card_index:`(:card_index:): 텍스트 수정, typo 해결
+* `:wrench:`(:wrench:): script 및 tool 수정
