@@ -2,8 +2,8 @@
   "context-menu": {
     "atom-text-editor": [
       {
-        "label": "Toggle luniverse-atom-plugin",
-        "command": "luniverse-atom-plugin:toggle"
+        "label": "SignIn luniverse-atom-plugin",
+        "command": "luniverse-signin:present-panel"
       }
     ]
   },
@@ -12,11 +12,11 @@
       "label": "Packages",
       "submenu": [
         {
-          "label": "luniverse-atom-plugin",
+          "label": "Luniverse-Atom-Plugin",
           "submenu": [
             {
-              "label": "Toggle",
-              "command": "luniverse-atom-plugin:toggle"
+              "label": "Luniverse SignIn",
+              "command": "luniverse-signin:present-panel"
             }
           ]
         }

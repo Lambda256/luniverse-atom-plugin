@@ -3,10 +3,9 @@
   "main": "./lib/luniverse-atom-plugin",
   "version": "0.0.0",
   "description": "A short description of your package",
-  "keywords": [
-  ],
+  "keywords": [],
   "activationCommands": {
-    "atom-workspace": "luniverse-atom-plugin:toggle"
+    "atom-workspace": "luniverse-signin:present-panel"
   },
   "repository": "https://github.com/atom/luniverse-atom-plugin",
   "license": "MIT",
@@ -14,5 +13,9 @@
     "atom": ">=1.0.0 <2.0.0"
   },
   "dependencies": {
+    "atom-space-pen-views": "^2.0.3",
+    "request": "2.x",
+    "highlight.js": "8.x",
+    "event-kit": "~1.2.0"
   }
 }

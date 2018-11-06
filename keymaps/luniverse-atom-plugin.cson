@@ -1,0 +1,12 @@
+# {
+#   "atom-workspace": {
+#     "ctrl-alt-o": "luniverse-atom-plugin:toggle"
+#   }
+# }
+
+'atom-workspace':
+  'ctrl-alt-l': 'luniverse-signin:present-panel'
+
+'.luniverse-signin-modal':
+  'tab': 'luniverse-signin:focus-next'
+  'escape': 'luniverse-signin:dismiss-panel'
