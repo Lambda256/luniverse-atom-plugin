@@ -7,7 +7,7 @@
   "activationCommands": {
     "atom-workspace": "luniverse-signin:present-panel"
   },
-  "repository": "https://github.com/atom/luniverse-atom-plugin",
+  "repository": "https://github.com/Lambda256/luniverse-atom-plugin",
   "license": "MIT",
   "engines": {
     "atom": ">=1.0.0 <2.0.0"
