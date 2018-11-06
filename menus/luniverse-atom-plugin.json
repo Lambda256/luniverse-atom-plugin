@@ -1,0 +1,26 @@
+{
+  "context-menu": {
+    "atom-text-editor": [
+      {
+        "label": "Toggle luniverse-atom-plugin",
+        "command": "luniverse-atom-plugin:toggle"
+      }
+    ]
+  },
+  "menu": [
+    {
+      "label": "Packages",
+      "submenu": [
+        {
+          "label": "luniverse-atom-plugin",
+          "submenu": [
+            {
+              "label": "Toggle",
+              "command": "luniverse-atom-plugin:toggle"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
