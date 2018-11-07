@@ -27,6 +27,9 @@ module.exports =
     @subscriptions.add atom.commands.add @luniverseSignInView.element,
       'luniverse-signin:dismiss-panel', => @luniverseSignInView.dismissPanel()
 
+    @subscriptions.add atom.commands.add @luniverseSignInView.passwordField.element,
+      'core:confirm': => @luniverseSignInView.luniverseLoginRequest()
+
   deactivate: ->
     @luniverseSignInView.destroy()
 
