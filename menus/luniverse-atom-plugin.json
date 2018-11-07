@@ -2,8 +2,8 @@
   "context-menu": {
     "atom-text-editor": [
       {
-        "label": "SignIn luniverse-atom-plugin",
-        "command": "luniverse-signin:present-panel"
+        "label": "Luniverse Security Assessment Service 2",
+        "command": "luniverse-api:create-audit"
       }
     ]
   },
