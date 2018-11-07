@@ -1,4 +1,3 @@
-{CompositeDisposable} = require 'event-kit'
 {TextEditorView, View} = require 'atom-space-pen-views'
 
 LuniverseApiClient = require './luniverse-api-client'
