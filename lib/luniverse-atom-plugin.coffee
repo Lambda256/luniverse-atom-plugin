@@ -1,5 +1,6 @@
 LuniverseSignInView = require './luniverse-atom-plugin-view'
 LuniverseApiClient = require './luniverse-api-client'
+LuniverseAuditListView = require './luniverse-audit-list-view'
 
 {CompositeDisposable} = require 'event-kit'
 
@@ -30,6 +31,22 @@ module.exports =
     @subscriptions.add atom.commands.add @luniverseSignInView.passwordField.element,
       'core:confirm': => @luniverseSignInView.luniverseLoginRequest()
 
+    atom.workspace.addOpener (uriToOpen) ->
+      # console.log('uriToOpen')
+      # console.log(uriToOpen)
+      # try
+      #   {protocol, host, pathname} = url.parse(uriToOpen)
+      # catch error
+      #   console.log('error')
+      #   console.log(error)
+      #   return
+      #
+      # console.log('return unless protocol is luniverse-result:')
+      # return unless protocol is 'luniverse-result:'
+
+      console.log('return new LuniverseAuditListView()')
+      return new LuniverseAuditListView()
+
   deactivate: ->
     @luniverseSignInView.destroy()
 
@@ -37,15 +54,27 @@ module.exports =
     token: LuniverseApiClient.token
 
   createAudit: ->
-    console.log('createAudit')
+    showResults = @showResults
     editor = atom.workspace.getActiveTextEditor()
     if editor
-      console.log('active editor exist')
       totalCode = editor.getText()
-      LuniverseApiClient.securityAssessment 'contractName 3', 'code', totalCode, (response) ->
+      LuniverseApiClient.securityAssessment 'Atom Request Code', 'code', totalCode, (response) ->
         console.log(response)
         if response == null
           atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다')
         else
           console.log('response is not null')
           atom.notifications.addSuccess('Luniverse Security Assessment 요청이 완료되었습니다!')
+          LuniverseApiClient.securityAssessmentReports 1, (response2) ->
+            console.log(response2)
+            showResults response2.data.reports
+
+  showResults: (reportsJson) ->
+    uri = 'luniverse-result://audit-list'
+    atom.workspace.open(uri, split: 'right', searchAllPanes: true).then (luniverseAuditListView) ->
+      console.log('luniverseAuditListView')
+      console.log(luniverseAuditListView)
+      if luniverseAuditListView instanceof LuniverseAuditListView
+        console.log('renderReports')
+        luniverseAuditListView.renderReports(reportsJson)
+        atom.workspace.activatePreviousPane()
