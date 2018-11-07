@@ -2,8 +2,8 @@
   "context-menu": {
     "atom-text-editor": [
       {
-        "label": "SignIn luniverse-atom-plugin",
-        "command": "luniverse-signin:present-panel"
+        "label": "Create Audit",
+        "command": "luniverse-api:create-audit"
       }
     ]
   },

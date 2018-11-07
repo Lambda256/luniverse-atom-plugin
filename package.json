@@ -5,7 +5,7 @@
   "description": "A short description of your package",
   "keywords": [],
   "activationCommands": {
-    "atom-workspace": "luniverse-signin:present-panel"
+    "atom-workspace": ["luniverse-signin:present-panel", "luniverse-api:create-audit"]
   },
   "repository": "https://github.com/Lambda256/luniverse-atom-plugin",
   "license": "MIT",
