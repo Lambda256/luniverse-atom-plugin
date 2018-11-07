@@ -2,7 +2,7 @@
   "context-menu": {
     "atom-text-editor": [
       {
-        "label": "Luniverse Security Assessment Service 2",
+        "label": "Create Audit",
         "command": "luniverse-api:create-audit"
       }
     ]

@@ -23,17 +23,6 @@ class LuniverseSignInView extends View
             @span class: 'loading loading-spinner-medium'
 
   initialize: (serializeState) ->
-    # @subscriptions = new CompositeDisposable
-    #
-    # @subscriptions.add atom.commands.add 'atom-workspace',
-    #   'luniverse-signin:present-panel', => @presentPanel()
-    #
-    # @subscriptions.add atom.commands.add this.element,
-    #   'luniverse-signin:focus-next', => @toggleFocus()
-    #
-    # @subscriptions.add atom.commands.add this.element,
-    #   'luniverse-signin:dismiss-panel', => @dismissPanel()
-
     @handleEvents()
 
   # Returns an object that can be retrieved when package is activated
@@ -54,17 +43,8 @@ class LuniverseSignInView extends View
   handleEvents: ->
     @askButton.on 'click', => @luniverseLoginRequest()
 
-    # @subscriptions.add atom.commands.add @emailField,
-    #   'core:confirm': => @luniverseLoginRequest()
-    #   'core:cancel': => @hideView()
-    #
-    # @subscriptions.add atom.commands.add @passwordField,
-    #   'core:confirm': => @luniverseLoginRequest()
-    #   'core:cancel': => @hideView()
-
   presentPanel: ->
     console.log('presentPanel')
-    #atom.workspaceView.append(this)
     @panel ?= atom.workspace.addModalPanel(item: @, visible: true)
 
     @panel.show()
@@ -85,10 +65,6 @@ class LuniverseSignInView extends View
         atom.notifications.addSuccess('Luniverse 로그인 완료. Luniverse Api를 사용가능합니다.')
       else
         atom.notifications.addError('Luniverse 로그인 실패.')
-
-        # @showResults(response)
-        # this.token = response.data.token
-        console.log(response.data.token)
 
   toggleFocus: ->
     if @emailField.element.hasFocus()
