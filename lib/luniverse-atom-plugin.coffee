@@ -1,3 +1,5 @@
+url = require 'url'
+
 LuniverseSignInView = require './luniverse-atom-plugin-view'
 LuniverseApiClient = require './luniverse-api-client'
 LuniverseAuditListView = require './luniverse-audit-list-view'
@@ -32,17 +34,15 @@ module.exports =
       'core:confirm': => @luniverseSignInView.luniverseLoginRequest()
 
     atom.workspace.addOpener (uriToOpen) ->
-      # console.log('uriToOpen')
-      # console.log(uriToOpen)
-      # try
-      #   {protocol, host, pathname} = url.parse(uriToOpen)
-      # catch error
-      #   console.log('error')
-      #   console.log(error)
-      #   return
-      #
-      # console.log('return unless protocol is luniverse-result:')
-      # return unless protocol is 'luniverse-result:'
+      try
+        {protocol, host, pathname} = url.parse(uriToOpen)
+      catch error
+        console.log('error')
+        console.log(error)
+        return
+
+      console.log('return unless protocol is luniverse-result:')
+      return unless protocol is 'luniverse-result:'
 
       console.log('return new LuniverseAuditListView()')
       return new LuniverseAuditListView()
