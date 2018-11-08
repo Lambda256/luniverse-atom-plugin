@@ -35,7 +35,7 @@ module.exports =
 
     atom.workspace.addOpener (uriToOpen) ->
       try
-        {protocol, host, pathname} = url.parse(uriToOpen)
+        {protocol} = url.parse(uriToOpen)
       catch error
         console.log('error')
         console.log(error)
