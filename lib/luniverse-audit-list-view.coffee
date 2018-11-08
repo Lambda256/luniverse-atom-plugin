@@ -90,14 +90,14 @@ class LuniverseAuditListView extends ScrollView
     return
 
   loadMoreResults: ->
-    progressIndicator = @progressIndicator
-    renderReports = @renderReports
+    # progressIndicator = @progressIndicator
+    # renderReports = @renderReports
     if @reportsJson['page'] * @reportsJson['rpp'] < @reportsJson['count']
       @progressIndicator.show()
       @loadMore.hide()
       LuniverseApiClient.securityAssessmentReports @reportsJson['page'] + 1, (response) =>
         @loadMore.show()
-        progressIndicator.hide()
-        renderReports(response.data.reports, true)
+        @progressIndicator.hide()
+        @renderReports(response.data.reports, true)
     else
       $('#load-more').children().children('span').text('No more results to load.')

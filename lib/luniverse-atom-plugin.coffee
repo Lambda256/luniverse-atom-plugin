@@ -54,20 +54,19 @@ module.exports =
     token: LuniverseApiClient.token
 
   createAudit: ->
-    showResults = @showResults
     editor = atom.workspace.getActiveTextEditor()
     if editor
       totalCode = editor.getText()
-      LuniverseApiClient.securityAssessment 'Atom Request Code', 'code', totalCode, (response) ->
+      LuniverseApiClient.securityAssessment 'Atom Request Code', 'code', totalCode, (response) =>
         console.log(response)
         if response == null
           atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다')
         else
           console.log('response is not null')
           atom.notifications.addSuccess('Luniverse Security Assessment 요청이 완료되었습니다!')
-          LuniverseApiClient.securityAssessmentReports 1, (response2) ->
+          LuniverseApiClient.securityAssessmentReports 1, (response2) =>
             console.log(response2)
-            showResults response2.data.reports
+            @showResults response2.data.reports
 
   showResults: (reportsJson) ->
     uri = 'luniverse-result://audit-list'
