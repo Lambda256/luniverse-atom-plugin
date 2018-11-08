@@ -236,14 +236,13 @@ class LuniverseAuditListView extends ScrollView
   #   return btn
 
   loadMoreResults: ->
-    loadMore = @loadMore
     progressIndicator = @progressIndicator
     renderReports = @renderReports
     if @reportsJson['page'] * @reportsJson['rpp'] < @reportsJson['count']
       @progressIndicator.show()
       @loadMore.hide()
       LuniverseApiClient.securityAssessmentReports @reportsJson['page'] + 1, (response) =>
-        loadMore.show()
+        @loadMore.show()
         progressIndicator.hide()
         renderReports(response.data.reports, true)
       # AskStackApiClient.page = AskStackApiClient.page + 1
