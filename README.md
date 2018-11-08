@@ -29,11 +29,12 @@ Atom에서 [Cmd+Shift+P]로 Window: Reload를 한 후에 Packages > Luniverse-At
 ```
 
 ## Commit Message With Emoji
-* `:sparkles:`(:sparkles:) 기능 추가
-* `:card_index:`(:card_index:) 텍스트 수정, typo 해결
-* `:wrench:`(:wrench:) script 및 tool 수정
-* `:back:`(:back:) rollback
-* `:fire:`(:fire:) code, comment, feature 등 삭제
-* `:construction:`(:construction:) 아직 진행중인 작업
-* `:art:`(:art:) 코드 퀄리티 및 프로젝트 개선. (ex: refactoring)
-* `:shirt:`(:shirt:) linter Warning 제거
+* :sparkles:`:sparkles:` 기능 추가
+* :card_index:`:card_index:` 텍스트 수정, typo 해결
+* :wrench:`:wrench:` script 및 tool 수정
+* :back:`:back:` rollback
+* :fire:`:fire:` code, comment, feature 등 삭제
+* :construction:`:construction:` 아직 진행중인 작업
+* :art:`:art:` 코드 퀄리티 및 프로젝트 개선. (ex: refactoring)
+* :shirt:`:shirt:` linter Warning 제거
+* :bug:`:bug:` 버그 수정 및 해결
