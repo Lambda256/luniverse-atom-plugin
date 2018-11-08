@@ -22,7 +22,7 @@ class LuniverseAuditListView extends ScrollView
     'Luniverse Audit List'
 
   getURI: ->
-    'luniverse-result://audit-list'
+    'luniverse://audit-list'
 
   getIconName: ->
     'three-bars'

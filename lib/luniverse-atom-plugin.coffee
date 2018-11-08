@@ -38,17 +38,20 @@ module.exports =
 
     atom.workspace.addOpener (uriToOpen) ->
       try
-        {protocol} = url.parse(uriToOpen)
+        {protocol, host, pathname} = url.parse(uriToOpen)
       catch error
-        console.log('error')
-        console.log(error)
+        console.log('error: ' + error)
         return
 
-      console.log('return unless protocol is luniverse-result:')
-      return unless protocol is 'luniverse-result:'
+      console.log('protocol: ' + protocol)
+      console.log('host: ' + host)
+      console.log('pathname: ' + pathname)
+      return unless protocol is 'luniverse:'
 
-      console.log('return new LuniverseAuditListView()')
-      return new LuniverseAuditListView()
+      if host is 'audit-list'
+        return new LuniverseAuditListView()
+
+      return
 
   deactivate: ->
     @luniverseSignInView.destroy()
@@ -76,7 +79,7 @@ module.exports =
       @showResults response.data.reports
 
   showResults: (reportsJson) ->
-    uri = 'luniverse-result://audit-list'
+    uri = 'luniverse://audit-list'
     atom.workspace.open(uri, split: 'right', searchAllPanes: true).then (luniverseAuditListView) ->
       console.log('luniverseAuditListView')
       console.log(luniverseAuditListView)
