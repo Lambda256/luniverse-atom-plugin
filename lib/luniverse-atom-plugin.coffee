@@ -22,6 +22,9 @@ module.exports =
       'luniverse-api:create-audit', => @createAudit()
 
     @subscriptions.add atom.commands.add 'atom-workspace',
+      'luniverse-api:security-assessment-reports', => @checkSecurityAssessmentReports()
+
+    @subscriptions.add atom.commands.add 'atom-workspace',
       'luniverse-signin:present-panel', => @luniverseSignInView.presentPanel()
 
     @subscriptions.add atom.commands.add @luniverseSignInView.element,
@@ -64,9 +67,13 @@ module.exports =
         else
           console.log('response is not null')
           atom.notifications.addSuccess('Luniverse Security Assessment 요청이 완료되었습니다!')
-          LuniverseApiClient.securityAssessmentReports 1, (response2) =>
-            console.log(response2)
-            @showResults response2.data.reports
+          @checkSecurityAssessmentReports()
+
+  checkSecurityAssessmentReports: ->
+    console.log('checkSecurityAssessmentReports')
+    LuniverseApiClient.securityAssessmentReports 1, (response) =>
+      console.log(response)
+      @showResults response.data.reports
 
   showResults: (reportsJson) ->
     uri = 'luniverse-result://audit-list'
