@@ -84,10 +84,17 @@ module.exports =
       output = solc.compile(input, 1)
       console.log(output)
       for contractName of output.contracts
-        console.log(contractName + ': ' + output.contracts[contractName].bytecode)
-        console.log(JSON.parse(output.contracts[contractName].interface))
-        atom.notifications.addSuccess(contractName + ': ' + output.contracts[contractName].bytecode)
-        atom.notifications.addSuccess(contractName + ': ' + JSON.parse(output.contracts[contractName].interface))
+        bytecode = output.contracts[contractName].bytecode
+        abi = JSON.parse(output.contracts[contractName].interface)
+        params = [{name: '_helloKorean', type: 'string', val: 'helloK'}, {name: '_helloEnglish', type: 'string', val: 'helloE'}]
+        console.log(contractName + ': ' + bytecode)
+        console.log(abi)
+        console.log(params)
+        # atom.notifications.addSuccess(contractName + ': ' + bytecode)
+        # atom.notifications.addSuccess(contractName + ': ' + abi)
+        LuniverseApiClient.createContract 'contractName', 'contractDescription', abi, bytecode, params, (response) =>
+          console.log('createContract response')
+          console.log(response)
 
   checkSecurityAssessmentReports: ->
     console.log('checkSecurityAssessmentReports')
