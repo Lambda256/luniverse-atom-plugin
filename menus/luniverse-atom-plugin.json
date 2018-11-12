@@ -4,6 +4,10 @@
       {
         "label": "Create Audit",
         "command": "luniverse-api:create-audit"
+      },
+      {
+        "label": "Compile Contract Code",
+        "command": "luniverse:compile-contract"
       }
     ]
   },

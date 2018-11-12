@@ -5,7 +5,12 @@
   "description": "A short description of your package",
   "keywords": [],
   "activationCommands": {
-    "atom-workspace": ["luniverse-signin:present-panel", "luniverse-api:create-audit", "luniverse-api:security-assessment-reports"]
+    "atom-workspace": [
+      "luniverse-signin:present-panel",
+      "luniverse-api:create-audit",
+      "luniverse-api:security-assessment-reports",
+      "luniverse:compile-contract"
+    ]
   },
   "repository": "https://github.com/Lambda256/luniverse-atom-plugin",
   "license": "MIT",
@@ -14,12 +19,14 @@
   },
   "dependencies": {
     "atom-space-pen-views": "^2.0.3",
-    "request": "2.x",
+    "event-kit": "~1.2.0",
     "highlight.js": "8.x",
-    "event-kit": "~1.2.0"
+    "request": "2.x",
+    "solc": "^0.4.25"
   },
   "devDependencies": {
     "coffeelint": "^1.0.0",
+    "coffeescope2": "^0.5.1",
     "husky": "^1.1.3"
   },
   "scripts": {
