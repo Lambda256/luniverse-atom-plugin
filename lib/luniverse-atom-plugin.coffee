@@ -1,3 +1,4 @@
+solc = require 'solc'
 url = require 'url'
 
 LuniverseSignInView = require './luniverse-atom-plugin-view'
@@ -23,6 +24,9 @@ module.exports =
 
     @subscriptions.add atom.commands.add 'atom-workspace',
       'luniverse-api:security-assessment-reports', => @checkSecurityAssessmentReports()
+
+    @subscriptions.add atom.commands.add 'atom-workspace',
+      'luniverse:compile-contract', => @compileContract()
 
     @subscriptions.add atom.commands.add 'atom-workspace',
       'luniverse-signin:present-panel', => @luniverseSignInView.presentPanel()
@@ -71,6 +75,19 @@ module.exports =
           console.log('response is not null')
           atom.notifications.addSuccess('Luniverse Security Assessment 요청이 완료되었습니다!')
           @checkSecurityAssessmentReports()
+
+  compileContract: ->
+    editor = atom.workspace.getActiveTextEditor()
+    if editor
+      totalCode = editor.getText()
+      input = totalCode
+      output = solc.compile(input, 1)
+      console.log(output)
+      for contractName of output.contracts
+        console.log(contractName + ': ' + output.contracts[contractName].bytecode)
+        console.log(JSON.parse(output.contracts[contractName].interface))
+        atom.notifications.addSuccess(contractName + ': ' + output.contracts[contractName].bytecode)
+        atom.notifications.addSuccess(contractName + ': ' + JSON.parse(output.contracts[contractName].interface))
 
   checkSecurityAssessmentReports: ->
     console.log('checkSecurityAssessmentReports')

@@ -1,7 +1,8 @@
 'atom-workspace':
   'ctrl-alt-l': 'luniverse-signin:present-panel'
   'ctrl-alt-a': 'luniverse-api:create-audit'
-  'ctrl-alt-c': 'luniverse-api:security-assessment-reports'
+  'ctrl-alt-r': 'luniverse-api:security-assessment-reports'
+  'ctrl-alt-c': 'luniverse:compile-contract'
 
 '.luniverse-signin-modal':
   'tab': 'luniverse-signin:focus-next'
