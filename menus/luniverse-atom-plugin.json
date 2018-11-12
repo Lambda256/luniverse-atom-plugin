@@ -17,6 +17,10 @@
             {
               "label": "Luniverse SignIn",
               "command": "luniverse-signin:present-panel"
+            },
+            {
+              "label": "Check Security Assessment Reports",
+              "command": "luniverse-api:security-assessment-reports"
             }
           ]
         }
