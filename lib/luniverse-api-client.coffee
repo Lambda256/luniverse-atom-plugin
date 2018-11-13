@@ -77,6 +77,28 @@ class LuniverseApiClient
         response = null
         callback(response)
 
+  @getChainList: (callback) ->
+    console.log(@baseURL + '/common-service/chains/')
+
+    options =
+      uri: @baseURL + '/common-service/chains/'
+      method: 'GET'
+      headers: {'dbs-auth-token': LuniverseApiClient.token}
+
+    request options, (error, res, body) ->
+      if not error and res.statusCode is 200
+        try
+          response = JSON.parse(body)
+        catch
+          console.log "Error: Invalid JSON"
+          response = null
+        finally
+          callback(response)
+      else
+        console.log "Error: #{error}", "Result: ", res
+        response = null
+        callback(response)
+
   @createContract: (name, description, abi, bytecode, params, callback) ->
     console.log('https://pre-be.luniverse.io/api/common-service/chain/1542007938176586187/contracts')
     formData = {name: name, description: description, abi: JSON.stringify(abi), bytecode: bytecode, params: JSON.stringify(params)}

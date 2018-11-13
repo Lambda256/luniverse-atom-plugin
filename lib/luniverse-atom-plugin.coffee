@@ -2,6 +2,7 @@ solc = require 'solc'
 url = require 'url'
 
 LuniverseSignInView = require './luniverse-atom-plugin-view'
+LuniverseCreateContractView = require './luniverse-create-contract-view'
 LuniverseApiClient = require './luniverse-api-client'
 LuniverseAuditListView = require './luniverse-audit-list-view'
 
@@ -9,6 +10,7 @@ LuniverseAuditListView = require './luniverse-audit-list-view'
 
 module.exports =
   luniverseSignInView: null
+  luniverseCreateContractView: null
 
   activate: (state) ->
     console.log("LuniverseSignInView state")
@@ -16,6 +18,7 @@ module.exports =
 
     LuniverseApiClient.setToken state.token
     @luniverseSignInView = new LuniverseSignInView(state.token)
+    @luniverseCreateContractView = new LuniverseCreateContractView(state.token)
 
     @subscriptions = new CompositeDisposable
 
@@ -28,6 +31,9 @@ module.exports =
     @subscriptions.add atom.commands.add 'atom-workspace',
       'luniverse:compile-contract', => @compileContract()
 
+    # @subscriptions.add atom.commands.add 'atom-workspace',
+    #   'luniverse:compile-contract', => @luniverseCreateContractView.presentPanel()
+
     @subscriptions.add atom.commands.add 'atom-workspace',
       'luniverse-signin:present-panel', => @luniverseSignInView.presentPanel()
 
@@ -35,7 +41,10 @@ module.exports =
       'luniverse-signin:focus-next', => @luniverseSignInView.toggleFocus()
 
     @subscriptions.add atom.commands.add @luniverseSignInView.element,
-      'luniverse-signin:dismiss-panel', => @luniverseSignInView.dismissPanel()
+      'luniverse:dismiss-panel', => @luniverseSignInView.dismissPanel()
+
+    @subscriptions.add atom.commands.add @luniverseCreateContractView.element,
+      'luniverse:dismiss-panel', => @luniverseCreateContractView.dismissPanel()
 
     @subscriptions.add atom.commands.add @luniverseSignInView.passwordField.element,
       'core:confirm': => @luniverseSignInView.luniverseLoginRequest()
@@ -77,6 +86,9 @@ module.exports =
           @checkSecurityAssessmentReports()
 
   compileContract: ->
+    # LuniverseApiClient.getChainList (response) ->
+    #   console.log('getChainList response')
+    #   console.log(response)
     editor = atom.workspace.getActiveTextEditor()
     if editor
       totalCode = editor.getText()
@@ -90,11 +102,10 @@ module.exports =
         console.log(contractName + ': ' + bytecode)
         console.log(abi)
         console.log(params)
-        # atom.notifications.addSuccess(contractName + ': ' + bytecode)
-        # atom.notifications.addSuccess(contractName + ': ' + abi)
-        LuniverseApiClient.createContract 'contractName', 'contractDescription', abi, bytecode, params, (response) =>
-          console.log('createContract response')
-          console.log(response)
+        @luniverseCreateContractView.presentPanel abi, bytecode
+        # LuniverseApiClient.createContract 'contractName', 'contractDescription', abi, bytecode, params, (response) =>
+        #   console.log('createContract response')
+        #   console.log(response)
 
   checkSecurityAssessmentReports: ->
     console.log('checkSecurityAssessmentReports')

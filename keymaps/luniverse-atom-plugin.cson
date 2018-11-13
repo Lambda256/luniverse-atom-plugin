@@ -6,4 +6,4 @@
 
 '.luniverse-signin-modal':
   'tab': 'luniverse-signin:focus-next'
-  'escape': 'luniverse-signin:dismiss-panel'
+  'escape': 'luniverse:dismiss-panel'
