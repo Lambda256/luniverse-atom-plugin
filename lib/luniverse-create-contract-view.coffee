@@ -13,6 +13,7 @@ class LuniverseCreateContractView extends View
         @div class: 'panel-body padded', =>
           @div =>
             @select outlet: 'chainSelector', class: 'form-control'
+            @select outlet: 'contractSelector', class: 'form-control'
             @div outlet: 'constructorParameters', =>
               @span 'Constructor Parameter'
             @div class: 'pull-right', =>
@@ -42,8 +43,9 @@ class LuniverseCreateContractView extends View
   onDidChangeModified: ->
 
   handleEvents: ->
+    @createButton.on 'click', => @createContract()
 
-  presentPanel: (abi, bytecode) ->
+  presentPanel: (contractBuildArray) ->
     console.log('presentPanel')
 
     @panel ?= atom.workspace.addModalPanel(item: @, visible: true)
@@ -51,12 +53,13 @@ class LuniverseCreateContractView extends View
     @panel.show()
     @progressIndicator.show()
 
-    parsedABI = @parseABI abi
-    console.log('inputs')
-    console.log(parsedABI)
+    @contractSelector.empty()
+    @constructorParameters.empty()
 
-    parsedABI.forEach (elem) =>
-      @constructorParameters.append new TextEditorView(mini:true, placeholderText: 'Enter ' + elem.name + '(' + elem.type + ') value.')
+    contractBuildArray.forEach ((json) =>
+      @contractSelector.append new Option(json, json)
+      )
+
     LuniverseApiClient.getChainList (response) =>
       console.log('getChainList response')
       console.log(response)
@@ -70,9 +73,46 @@ class LuniverseCreateContractView extends View
         @chainSelector.focus()
       @progressIndicator.hide()
 
+
+
+  # presentSingleContractPanel: (abi, bytecode) ->
+  #   console.log('presentPanel')
+  #
+  #   @panel ?= atom.workspace.addModalPanel(item: @, visible: true)
+  #
+  #   @panel.show()
+  #   @progressIndicator.show()
+  #
+  #   parsedABI = @parseABI abi
+  #   console.log('inputs')
+  #   console.log(parsedABI)
+  #
+  #   @constructorParameters.empty()
+  #   parsedABI.forEach (elem) =>
+  #     @constructorParameters.append new TextEditorView(mini:true, placeholderText: 'Enter ' + elem.name + '(' + elem.type + ') value.')
+  #
+  #   LuniverseApiClient.getChainList (response) =>
+  #     console.log('getChainList response')
+  #     console.log(response)
+  #     if response == null
+  #       atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다')
+  #     else
+  #       console.log('response is not null')
+  #       @chainSelector.empty()
+  #       for chain in response.data.chains
+  #         @chainSelector.append new Option(chain.name, chain.chainId)
+  #       @chainSelector.focus()
+  #     @progressIndicator.hide()
+
   dismissPanel: ->
     console.log('dismissPanel')
     this.hideView()
+
+  createContract: ->
+    @constructorInputs.forEach (elem) ->
+      console.log('createContract forEach')
+      console.log(elem)
+    @dismissPanel()
 
   parseABI: (abi) ->
     # return type is array

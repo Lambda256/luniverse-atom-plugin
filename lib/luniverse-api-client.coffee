@@ -99,7 +99,7 @@ class LuniverseApiClient
         response = null
         callback(response)
 
-  @createContract: (name, description, abi, bytecode, params, callback) ->
+  @createContract: (chainId, name, description, abi, bytecode, params, callback) ->
     console.log('https://pre-be.luniverse.io/api/common-service/chain/1542007938176586187/contracts')
     formData = {name: name, description: description, abi: JSON.stringify(abi), bytecode: bytecode, params: JSON.stringify(params)}
     console.log(formData)

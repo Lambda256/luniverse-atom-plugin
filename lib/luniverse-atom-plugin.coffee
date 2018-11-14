@@ -1,5 +1,8 @@
-solc = require 'solc'
+# solc = require 'solc'
 url = require 'url'
+fs = require 'fs'
+shell = require 'shelljs'
+path = require 'path'
 
 LuniverseSignInView = require './luniverse-atom-plugin-view'
 LuniverseCreateContractView = require './luniverse-create-contract-view'
@@ -90,22 +93,98 @@ module.exports =
     #   console.log('getChainList response')
     #   console.log(response)
     editor = atom.workspace.getActiveTextEditor()
-    if editor
-      totalCode = editor.getText()
-      input = totalCode
-      output = solc.compile(input, 1)
-      console.log(output)
-      for contractName of output.contracts
-        bytecode = output.contracts[contractName].bytecode
-        abi = JSON.parse(output.contracts[contractName].interface)
-        params = [{name: '_helloKorean', type: 'string', val: 'helloK'}, {name: '_helloEnglish', type: 'string', val: 'helloE'}]
-        console.log(contractName + ': ' + bytecode)
-        console.log(abi)
-        console.log(params)
-        @luniverseCreateContractView.presentPanel abi, bytecode
+    # pane = atom.workspace.getActivePaneItem()
+    # container = atom.workspace.getActivePaneContainer()
+    # console.log(editor.getPath())
+    # console.log('pane')
+    # console.log(pane)
+    # console.log('container')
+    # console.log(container)
+    #
+    # filePath = atom.workspace.getActivePaneItem().buffer.file.path
+    # projectPath = ""
+    # atom.project.getDirectories().forEach (dir) =>
+    #   if dir.contains filePath
+    #     projectPath = dir.path
+    # console.log(projectPath)
+    projectPath = '/Users/mint/Desktop/Lambda256/lambda-token-protocol'
+    # atom.notifications.addInfo('message message', {
+    #   buttons: [
+    #     {
+    #       className: 'btn-details',
+    #       onDidClick: ->,
+    #       text: 'Details'
+    #     }
+    #   ],
+    #   detail: 'This is more stuff'
+    #   })
+
+    console.log('start compiling')
+    console.log(shell.which('node').stdout)
+    shell.config.execPath = shell.which('node').stdout
+    console.log(shell.cd(projectPath))
+    # for contractJSON in shell.ls(projectPath + '/build/contracts')
+    #   console.log(contractJSON)
+    # console.log(shell.exec('git status'))
+    # console.log(shell.exec('./node_modules/.bin/truffle compile'))
+    compileResult = shell.exec 'truffle compile'
+    if compileResult.code is 0
+      console.log('truffle compile success')
+      console.log(compileResult)
+      truffleNotification = atom.notifications.addSuccess('truffle compile success', {
+        buttons: [
+          {
+            className: 'btn-details',
+            onDidClick: =>
+              @deployContract()
+              truffleNotification.dismiss()
+            ,
+            text: 'Deploy through Luniverse'
+          }
+        ],
+        detail: compileResult.stdout,
+        dismissable: true
+        })
+
+    # console.log(shell.exec('truffle compile'))
+
+    # console.log('dirname: ' + __dirname)
+    # console.log('process.cwd(): ' + process.cwd())
+
+    # input = {
+    #   'cont.sol': 'import "lib.sol"; contract x { function g() { L.f(); } }',
+    #   'lib.sol': 'library L { function f() returns (uint) { return 7; } }'
+    # }
+    # output = solc.compile({ sources: input }, 1)
+    # for contractName of output.contracts
+    #   console.log(contractName + ': ' + output.contracts[contractName].bytecode)
+    #
+    # data = fs.readFileSync('/Users/mint/Desktop/Lambda256/solidity_example.sol')
+    # console.log(data.toString())
+
+    # fs.readFile '/Users/mint/Desktop/Lambda256/solidity_example.sol', (err, data) =>
+    #   console.log 'Asynchronous read: ' + data.toString()
+    # if editor
+    #   totalCode = editor.getText()
+    #   input = totalCode
+    #   output = solc.compile(input, 1)
+    #   console.log(output)
+    #   for contractName of output.contracts
+    #     bytecode = output.contracts[contractName].bytecode
+    #     abi = JSON.parse(output.contracts[contractName].interface)
+    #     params = [{name: '_helloKorean', type: 'string', val: 'helloK'}, {name: '_helloEnglish', type: 'string', val: 'helloE'}]
+    #     console.log(contractName + ': ' + bytecode)
+    #     console.log(abi)
+    #     console.log(params)
+    #     @luniverseCreateContractView.presentPanel abi, bytecode
         # LuniverseApiClient.createContract 'contractName', 'contractDescription', abi, bytecode, params, (response) =>
         #   console.log('createContract response')
         #   console.log(response)
+
+  deployContract: ->
+    console.log('deployContract')
+    projectPath = '/Users/mint/Desktop/Lambda256/lambda-token-protocol'
+    @luniverseCreateContractView.presentPanel shell.ls(projectPath + '/build/contracts')
 
   checkSecurityAssessmentReports: ->
     console.log('checkSecurityAssessmentReports')
