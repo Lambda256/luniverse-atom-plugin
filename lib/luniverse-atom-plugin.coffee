@@ -4,6 +4,7 @@ fs = require 'fs'
 shell = require 'shelljs'
 path = require 'path'
 
+helper = require './luniverse-helper-functions'
 LuniverseSignInView = require './luniverse-atom-plugin-view'
 LuniverseCreateContractView = require './luniverse-create-contract-view'
 LuniverseApiClient = require './luniverse-api-client'
@@ -100,14 +101,8 @@ module.exports =
     # console.log(pane)
     # console.log('container')
     # console.log(container)
-    #
-    # filePath = atom.workspace.getActivePaneItem().buffer.file.path
-    # projectPath = ""
-    # atom.project.getDirectories().forEach (dir) =>
-    #   if dir.contains filePath
-    #     projectPath = dir.path
-    # console.log(projectPath)
-    projectPath = '/Users/mint/Desktop/Lambda256/lambda-token-protocol'
+
+    projectPath = helper.getUserPath()
     # atom.notifications.addInfo('message message', {
     #   buttons: [
     #     {
@@ -183,7 +178,7 @@ module.exports =
 
   deployContract: ->
     console.log('deployContract')
-    projectPath = '/Users/mint/Desktop/Lambda256/lambda-token-protocol'
+    projectPath = helper.getUserPath()
     @luniverseCreateContractView.presentPanel shell.ls(projectPath + '/build/contracts')
 
   checkSecurityAssessmentReports: ->

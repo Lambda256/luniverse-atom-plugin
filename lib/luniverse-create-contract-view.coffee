@@ -1,6 +1,7 @@
-{$, $$, $$$, TextEditorView, View} = require 'atom-space-pen-views'
+{$, TextEditorView, View} = require 'atom-space-pen-views'
 fs = require 'fs'
 
+helper = require './luniverse-helper-functions'
 LuniverseApiClient = require './luniverse-api-client'
 
 module.exports =
@@ -48,6 +49,8 @@ class LuniverseCreateContractView extends View
 
   handleEvents: ->
     @createButton.on 'click', =>
+      @progressIndicator.show()
+
       chainId = @chainSelector.val()
       name = @compiledObject.contractName
       description = 'description example'
@@ -74,16 +77,14 @@ class LuniverseCreateContractView extends View
       # @createContract()
     @contractSelector.on 'change', (e) =>
       console.log($(e.target).val())
-      projectPath = '/Users/mint/Desktop/Lambda256/lambda-token-protocol'
+      projectPath = helper.getUserPath()
       @setConstructorParameters(projectPath + '/build/contracts/', $(e.target).val())
 
   presentPanel: (contractBuildArray) ->
-    console.log('presentPanel')
-
-    # pencil =
+    @compiledObject = null
+    @parameterFields = []
 
     @panel ?= atom.workspace.addModalPanel(item: @, visible: true)
-
     @panel.show()
     @progressIndicator.show()
 
@@ -160,14 +161,6 @@ class LuniverseCreateContractView extends View
       textEditor.inputInfo = elem
       @parameterFields.push textEditor
       @constructorParameters.append textEditor
-
-  createContract: ->
-    console.log(@chainSelector.val())
-    console.log(@contractSelector.val())
-    @constructorInputs.forEach (elem) ->
-      console.log('createContract forEach')
-      console.log(elem)
-    @dismissPanel()
 
   parseABI: (abi) -> # returns [Object]
     [constructorInputs, ...] = abi.filter ((elem) ->
