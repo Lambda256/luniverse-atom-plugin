@@ -6,6 +6,3 @@ module.exports =
       if dir.contains filePath
         projectPath = dir.path
     return projectPath
-
-  getABC: ->
-    console.log('ABC')

@@ -62,19 +62,11 @@ class LuniverseCreateContractView extends View
         params.push {name: paramField.inputInfo.name, type: paramField.inputInfo.type, val: paramField.getText()}
 
       LuniverseApiClient.createContract chainId, name, description, abi, bytecode, params, (response) =>
-        console.log('createContract response')
         console.log(response)
         if response.code is 'OK'
           @dismissPanel()
           atom.notifications.addSuccess('Contract Deploy 요청이 완료되었습니다!')
 
-      # @constructorParameters.context.childNodes.forEach (paramField) ->
-      #   console.log(paramField)
-      #   console.log(paramField.__spacePenView)
-      # @constructorParameters.forEach (elem) ->
-      #   console.log('createContract forEach')
-      #   console.log(elem)
-      # @createContract()
     @contractSelector.on 'change', (e) =>
       console.log($(e.target).val())
       projectPath = helper.getUserPath()
@@ -108,37 +100,6 @@ class LuniverseCreateContractView extends View
           @chainSelector.append new Option(chain.name, chain.chainId)
         @chainSelector.focus()
       @progressIndicator.hide()
-
-
-
-  # presentSingleContractPanel: (abi, bytecode) ->
-  #   console.log('presentPanel')
-  #
-  #   @panel ?= atom.workspace.addModalPanel(item: @, visible: true)
-  #
-  #   @panel.show()
-  #   @progressIndicator.show()
-  #
-  #   parsedABI = @parseABI abi
-  #   console.log('inputs')
-  #   console.log(parsedABI)
-  #
-  #   @constructorParameters.empty()
-  #   parsedABI.forEach (elem) =>
-  #     @constructorParameters.append new TextEditorView(mini:true, placeholderText: 'Enter ' + elem.name + '(' + elem.type + ') value.')
-  #
-  #   LuniverseApiClient.getChainList (response) =>
-  #     console.log('getChainList response')
-  #     console.log(response)
-  #     if response == null
-  #       atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다')
-  #     else
-  #       console.log('response is not null')
-  #       @chainSelector.empty()
-  #       for chain in response.data.chains
-  #         @chainSelector.append new Option(chain.name, chain.chainId)
-  #       @chainSelector.focus()
-  #     @progressIndicator.hide()
 
   dismissPanel: ->
     console.log('dismissPanel')

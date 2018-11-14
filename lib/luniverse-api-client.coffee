@@ -102,7 +102,7 @@ class LuniverseApiClient
   @createContract: (chainId, name, description, abi, bytecode, params, callback) ->
     console.log(@baseURL + '/common-service/chains/' + chainId + '/contracts')
     formData = {name: name, description: description, abi: JSON.stringify(abi), bytecode: bytecode, params: JSON.stringify(params)}
-    console.log(formData)
+
     options =
       uri: @baseURL + '/common-service/chains/' + chainId + '/contracts'
       method: 'POST'
