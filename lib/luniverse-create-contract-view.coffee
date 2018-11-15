@@ -80,6 +80,8 @@ class LuniverseCreateContractView extends View
     @panel.show()
     @progressIndicator.show()
 
+    @chainSelector.focus()
+
     @initializeSelectBox @contractSelector, 'Select your compiled contract file'
 
     @constructorParameters.empty()

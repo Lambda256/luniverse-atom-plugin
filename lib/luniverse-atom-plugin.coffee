@@ -88,9 +88,6 @@ module.exports =
           @checkSecurityAssessmentReports()
 
   compileContract: ->
-
-    editor = atom.workspace.getActiveTextEditor()
-
     projectPath = helper.getUserPath()
 
     shell.config.execPath = shell.which('node').stdout
