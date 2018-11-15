@@ -4,6 +4,6 @@
   'ctrl-alt-r': 'luniverse-api:security-assessment-reports'
   'ctrl-alt-c': 'luniverse:compile-contract'
 
-'.luniverse-signin-modal':
+'.luniverse-modal':
   'tab': 'luniverse-signin:focus-next'
-  'escape': 'luniverse-signin:dismiss-panel'
+  'escape': 'luniverse:dismiss-panel'

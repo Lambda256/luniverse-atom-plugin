@@ -1,7 +1,10 @@
-solc = require 'solc'
+# solc = require 'solc'
 url = require 'url'
+shell = require 'shelljs'
 
+helper = require './luniverse-helper-functions'
 LuniverseSignInView = require './luniverse-atom-plugin-view'
+LuniverseCreateContractView = require './luniverse-create-contract-view'
 LuniverseApiClient = require './luniverse-api-client'
 LuniverseAuditListView = require './luniverse-audit-list-view'
 
@@ -9,6 +12,7 @@ LuniverseAuditListView = require './luniverse-audit-list-view'
 
 module.exports =
   luniverseSignInView: null
+  luniverseCreateContractView: null
 
   activate: (state) ->
     console.log("LuniverseSignInView state")
@@ -16,6 +20,7 @@ module.exports =
 
     LuniverseApiClient.setToken state.token
     @luniverseSignInView = new LuniverseSignInView(state.token)
+    @luniverseCreateContractView = new LuniverseCreateContractView(state.token)
 
     @subscriptions = new CompositeDisposable
 
@@ -35,7 +40,13 @@ module.exports =
       'luniverse-signin:focus-next', => @luniverseSignInView.toggleFocus()
 
     @subscriptions.add atom.commands.add @luniverseSignInView.element,
-      'luniverse-signin:dismiss-panel', => @luniverseSignInView.dismissPanel()
+      'luniverse:dismiss-panel', => @luniverseSignInView.dismissPanel()
+
+    @subscriptions.add atom.commands.add @luniverseCreateContractView.element,
+      'luniverse:dismiss-panel', => @luniverseCreateContractView.dismissPanel()
+
+    @subscriptions.add atom.commands.add @luniverseCreateContractView.element,
+      'luniverse-signin:focus-next', => @luniverseCreateContractView.toggleFocus()
 
     @subscriptions.add atom.commands.add @luniverseSignInView.passwordField.element,
       'core:confirm': => @luniverseSignInView.luniverseLoginRequest()
@@ -77,17 +88,33 @@ module.exports =
           @checkSecurityAssessmentReports()
 
   compileContract: ->
-    editor = atom.workspace.getActiveTextEditor()
-    if editor
-      totalCode = editor.getText()
-      input = totalCode
-      output = solc.compile(input, 1)
-      console.log(output)
-      for contractName of output.contracts
-        console.log(contractName + ': ' + output.contracts[contractName].bytecode)
-        console.log(JSON.parse(output.contracts[contractName].interface))
-        atom.notifications.addSuccess(contractName + ': ' + output.contracts[contractName].bytecode)
-        atom.notifications.addSuccess(contractName + ': ' + JSON.parse(output.contracts[contractName].interface))
+    projectPath = helper.getUserPath()
+
+    shell.config.execPath = shell.which('node').stdout
+    shell.cd(projectPath)
+
+    compileResult = shell.exec('./node_modules/.bin/truffle compile')
+    if compileResult.code is 0
+      console.log('truffle compile success')
+      console.log(compileResult)
+      truffleNotification = atom.notifications.addSuccess('truffle compile success', {
+        buttons: [
+          {
+            className: 'btn-details',
+            onDidClick: =>
+              @deployContract()
+              truffleNotification.dismiss()
+            ,
+            text: 'Deploy through Luniverse'
+          }
+        ],
+        detail: compileResult.stdout,
+        dismissable: true
+        })
+
+  deployContract: ->
+    projectPath = helper.getUserPath()
+    @luniverseCreateContractView.presentPanel shell.ls(projectPath + '/build/contracts')
 
   checkSecurityAssessmentReports: ->
     console.log('checkSecurityAssessmentReports')
