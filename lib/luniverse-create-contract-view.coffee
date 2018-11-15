@@ -101,7 +101,7 @@ class LuniverseCreateContractView extends View
         for chain in response.data.chains
           @chainSelector.append new Option(chain.name, chain.chainId)
         @chainSelector.focus()
-      # @progressIndicator.hide()
+      @progressIndicator.hide()
 
   dismissPanel: ->
     console.log('dismissPanel')
