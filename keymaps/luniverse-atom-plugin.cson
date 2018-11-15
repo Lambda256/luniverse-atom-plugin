@@ -2,6 +2,7 @@
   'ctrl-alt-a': 'luniverse-api:create-audit'
   'ctrl-alt-r': 'luniverse-api:security-assessment-reports'
   'ctrl-alt-c': 'luniverse:compile-contract'
+  'ctrl-alt-1': 'luniverse:open-setting'
 
 '.luniverse-modal':
   'tab': 'luniverse-signin:focus-next'

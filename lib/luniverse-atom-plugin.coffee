@@ -36,6 +36,9 @@ module.exports =
     @subscriptions.add atom.commands.add 'atom-workspace',
       'luniverse:compile-contract', => @compileContract()
 
+    @subscriptions.add atom.commands.add 'atom-workspace',
+      'luniverse:open-setting', => @openSetting()
+
     @subscriptions.add atom.commands.add @luniverseCreateContractView.element,
       'luniverse:dismiss-panel', => @luniverseCreateContractView.dismissPanel()
 
@@ -65,15 +68,18 @@ module.exports =
   serialize: ->
 
   signInLuniverse: (email, password) ->
-    LuniverseApiClient.login email, password, (response) ->
+    LuniverseApiClient.login email, password, (response) =>
       if response.result && response.data.token
         atom.notifications.addSuccess('Luniverse 로그인 완료. Luniverse Api를 사용가능합니다.')
       else
-        atom.workspace.open('atom://config/packages/luniverse-atom-plugin')
+        @openSetting()
         atom.notifications.addError('Luniverse 로그인 실패', {
           detail: response.message,
           dismissable: true
         })
+
+  openSetting: ->
+    atom.workspace.open('atom://config/packages/luniverse-atom-plugin')
 
   createAudit: ->
     editor = atom.workspace.getActiveTextEditor()
