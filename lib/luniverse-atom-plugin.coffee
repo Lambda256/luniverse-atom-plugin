@@ -3,7 +3,6 @@ url = require 'url'
 shell = require 'shelljs'
 
 helper = require './luniverse-helper-functions'
-LuniverseSignInView = require './luniverse-atom-plugin-view'
 LuniverseCreateContractView = require './luniverse-create-contract-view'
 LuniverseApiClient = require './luniverse-api-client'
 LuniverseAuditListView = require './luniverse-audit-list-view'
@@ -11,18 +10,22 @@ LuniverseAuditListView = require './luniverse-audit-list-view'
 {CompositeDisposable} = require 'event-kit'
 
 module.exports =
-  luniverseSignInView: null
   luniverseCreateContractView: null
 
   activate: (state) ->
-    console.log("LuniverseSignInView state")
-    console.log(state)
-
-    LuniverseApiClient.setToken state.token
-    @luniverseSignInView = new LuniverseSignInView(state.token)
-    @luniverseCreateContractView = new LuniverseCreateContractView(state.token)
-
     @subscriptions = new CompositeDisposable
+
+    # If email changed -> signin again
+    @subscriptions.add atom.config.onDidChange "luniverse-atom-plugin.accountEmail", ({ newEmail }) =>
+      @signInLuniverse newEmail, atom.config.get('luniverse-atom-plugin.accountPassword')
+
+    # If password changed -> signin again
+    @subscriptions.add atom.config.onDidChange "luniverse-atom-plugin.accountPassword", ({ newPassword }) =>
+      @signInLuniverse atom.config.get('luniverse-atom-plugin.accountEmail'), newPassword
+
+    @signInLuniverse atom.config.get('luniverse-atom-plugin.accountEmail'), atom.config.get('luniverse-atom-plugin.accountPassword')
+
+    @luniverseCreateContractView = new LuniverseCreateContractView('')
 
     @subscriptions.add atom.commands.add 'atom-workspace',
       'luniverse-api:create-audit', => @createAudit()
@@ -34,22 +37,13 @@ module.exports =
       'luniverse:compile-contract', => @compileContract()
 
     @subscriptions.add atom.commands.add 'atom-workspace',
-      'luniverse-signin:present-panel', => @luniverseSignInView.presentPanel()
-
-    @subscriptions.add atom.commands.add @luniverseSignInView.element,
-      'luniverse-signin:focus-next', => @luniverseSignInView.toggleFocus()
-
-    @subscriptions.add atom.commands.add @luniverseSignInView.element,
-      'luniverse:dismiss-panel', => @luniverseSignInView.dismissPanel()
+      'luniverse:open-setting', => @openSetting()
 
     @subscriptions.add atom.commands.add @luniverseCreateContractView.element,
       'luniverse:dismiss-panel', => @luniverseCreateContractView.dismissPanel()
 
     @subscriptions.add atom.commands.add @luniverseCreateContractView.element,
       'luniverse-signin:focus-next', => @luniverseCreateContractView.toggleFocus()
-
-    @subscriptions.add atom.commands.add @luniverseSignInView.passwordField.element,
-      'core:confirm': => @luniverseSignInView.luniverseLoginRequest()
 
     atom.workspace.addOpener (uriToOpen) ->
       try
@@ -69,10 +63,23 @@ module.exports =
       return
 
   deactivate: ->
-    @luniverseSignInView.destroy()
+    @luniverseCreateContractView.destroy()
 
   serialize: ->
-    token: LuniverseApiClient.token
+
+  signInLuniverse: (email, password) ->
+    LuniverseApiClient.login email, password, (response) =>
+      if response.result && response.data.token
+        atom.notifications.addSuccess('Luniverse 로그인 완료. Luniverse Api를 사용가능합니다.')
+      else
+        @openSetting()
+        atom.notifications.addError('Luniverse 로그인 실패', {
+          detail: response.message,
+          dismissable: true
+        })
+
+  openSetting: ->
+    atom.workspace.open('atom://config/packages/luniverse-atom-plugin')
 
   createAudit: ->
     editor = atom.workspace.getActiveTextEditor()

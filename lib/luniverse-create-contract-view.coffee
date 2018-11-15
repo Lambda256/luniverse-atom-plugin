@@ -127,8 +127,6 @@ class LuniverseCreateContractView extends View
         @parameterFields[index + 1].focus()
         return
 
-
-
   parseABI: (abi) -> # returns [Object]
     [constructorInputs, ...] = abi.filter ((elem) ->
       return elem.type is 'constructor')
