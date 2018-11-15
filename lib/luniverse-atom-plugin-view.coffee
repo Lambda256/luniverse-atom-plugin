@@ -7,7 +7,7 @@ module.exports =
 class LuniverseSignInView extends View
 
   @content: ->
-    @div class: 'luniverse-signin-modal overlay from-top padded', =>
+    @div class: 'luniverse-modal overlay from-top padded', =>
       @div class: 'inset-panel', =>
         @div class: 'panel-heading', =>
           @span 'Sign in to Luniverse'

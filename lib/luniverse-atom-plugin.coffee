@@ -45,6 +45,9 @@ module.exports =
     @subscriptions.add atom.commands.add @luniverseCreateContractView.element,
       'luniverse:dismiss-panel', => @luniverseCreateContractView.dismissPanel()
 
+    @subscriptions.add atom.commands.add @luniverseCreateContractView.element,
+      'luniverse-signin:focus-next', => @luniverseCreateContractView.toggleFocus()
+
     @subscriptions.add atom.commands.add @luniverseSignInView.passwordField.element,
       'core:confirm': => @luniverseSignInView.luniverseLoginRequest()
 

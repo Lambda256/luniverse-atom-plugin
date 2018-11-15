@@ -11,7 +11,7 @@ class LuniverseCreateContractView extends View
   parameterFields: []
 
   @content: ->
-    @div class: 'luniverse-create-contract-modal overlay from-top padded', =>
+    @div class: 'luniverse-modal overlay from-top padded', =>
       @div class: 'inset-panel', =>
         @div class: 'panel-heading', =>
           @span 'Select Your Chain'
@@ -99,18 +99,14 @@ class LuniverseCreateContractView extends View
         for chain in response.data.chains
           @chainSelector.append new Option(chain.name, chain.chainId)
         @chainSelector.focus()
-      @progressIndicator.hide()
+      # @progressIndicator.hide()
 
   dismissPanel: ->
     console.log('dismissPanel')
     this.hideView()
 
   setConstructorParameters: (targetPath, targetContract) ->
-    console.log('targetPath: ' + targetPath)
-    console.log('targetContract: ' + targetContract)
     data = JSON.parse(fs.readFileSync(targetPath + targetContract))
-    console.log(data.abi)
-    console.log(data.bytecode)
 
     @compiledObject = data
 
@@ -122,6 +118,14 @@ class LuniverseCreateContractView extends View
       textEditor.inputInfo = elem
       @parameterFields.push textEditor
       @constructorParameters.append textEditor
+
+  toggleFocus: ->
+    for inputField, index in @parameterFields
+      if inputField.element.hasFocus() && index + 1 < @parameterFields.length
+        @parameterFields[index + 1].focus()
+        return
+
+
 
   parseABI: (abi) -> # returns [Object]
     [constructorInputs, ...] = abi.filter ((elem) ->
