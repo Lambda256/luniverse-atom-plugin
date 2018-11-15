@@ -1,5 +1,4 @@
 'atom-workspace':
-  'ctrl-alt-l': 'luniverse-signin:present-panel'
   'ctrl-alt-a': 'luniverse-api:create-audit'
   'ctrl-alt-r': 'luniverse-api:security-assessment-reports'
   'ctrl-alt-c': 'luniverse:compile-contract'
