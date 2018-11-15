@@ -45,7 +45,6 @@ class LuniverseSignInView extends View
     @askButton.on 'click', => @luniverseLoginRequest()
 
   presentPanel: ->
-    console.log('presentPanel')
     console.log(helper.getUserPath())
     @panel ?= atom.workspace.addModalPanel(item: @, visible: true)
 

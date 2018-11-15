@@ -15,14 +15,32 @@ module.exports =
   luniverseCreateContractView: null
 
   activate: (state) ->
-    console.log("LuniverseSignInView state")
-    console.log(state)
-
-    LuniverseApiClient.setToken state.token
-    @luniverseSignInView = new LuniverseSignInView(state.token)
-    @luniverseCreateContractView = new LuniverseCreateContractView(state.token)
-
+    console.log('Luniverse Plugin Activated!')
     @subscriptions = new CompositeDisposable
+
+    # If email changed -> signin again
+    @subscriptions.add atom.config.onDidChange "luniverse-atom-plugin.accountEmail", ({ newEmail }) =>
+      console.log('email changed!')
+      @signInLuniverse newEmail, atom.config.get('luniverse-atom-plugin.accountPassword')
+
+    # If password changed -> signin again
+    @subscriptions.add atom.config.onDidChange "luniverse-atom-plugin.accountPassword", ({ newPassword }) =>
+      console.log('password changed!')
+      @signInLuniverse atom.config.get('luniverse-atom-plugin.accountEmail'), newPassword
+
+    @signInLuniverse atom.config.get('luniverse-atom-plugin.accountEmail'), atom.config.get('luniverse-atom-plugin.accountPassword')
+
+    # atom.config.get('luniverse-atom-plugin.accountEmail'), atom.config.get('luniverse-atom-plugin.accountPassword'), (response) =>
+    #   console.log('testing ASYNC 3')
+    #   if response.data.token
+    #     atom.notifications.addSuccess('Luniverse 로그인 완료. Luniverse Api를 사용가능합니다.')
+    #   else
+    #     atom.notifications.addError('Luniverse 로그인 실패.')
+
+    # console.log('testing ASYNC 2')
+    # LuniverseApiClient.setToken state.token
+    @luniverseSignInView = new LuniverseSignInView('')
+    @luniverseCreateContractView = new LuniverseCreateContractView('')
 
     @subscriptions.add atom.commands.add 'atom-workspace',
       'luniverse-api:create-audit', => @createAudit()
@@ -72,7 +90,19 @@ module.exports =
     @luniverseSignInView.destroy()
 
   serialize: ->
-    token: LuniverseApiClient.token
+
+  signInLuniverse: (email, password) ->
+    console.log('email: ' + email)
+    console.log('password: ' + password)
+    LuniverseApiClient.login email, password, (response) =>
+      if response.result && response.data.token
+        atom.notifications.addSuccess('Luniverse 로그인 완료. Luniverse Api를 사용가능합니다.')
+      else
+        atom.workspace.open('atom://config/packages/luniverse-atom-plugin')
+        atom.notifications.addError('Luniverse 로그인 실패', {
+          detail: response.message,
+          dismissable: true
+        })
 
   createAudit: ->
     editor = atom.workspace.getActiveTextEditor()

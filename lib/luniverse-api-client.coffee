@@ -29,7 +29,7 @@ class LuniverseApiClient
           callback(response)
       else
         console.log "Error: #{error}", "Result: ", res
-        response = null
+        response = JSON.parse(body)
         callback(response)
 
   @securityAssessment: (contractName, contentType, code, callback) ->
