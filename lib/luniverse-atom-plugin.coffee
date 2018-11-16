@@ -68,13 +68,16 @@ module.exports =
   serialize: ->
 
   signInLuniverse: (email, password) ->
-    LuniverseApiClient.login email, password, (response) =>
-      if response.result && response.data.token
-        atom.notifications.addSuccess('Luniverse 로그인 완료. Luniverse Api를 사용가능합니다.')
-      else
+    LuniverseApiClient.login email, password
+      .then (res) ->
+        if res.result && res.data.token
+          atom.notifications.addSuccess('Luniverse 로그인 완료. Luniverse Api를 사용가능합니다.')
+        else
+          throw new Error(response.message)
+      .catch (err) =>
         @openSetting()
         atom.notifications.addError('Luniverse 로그인 실패', {
-          detail: response.message,
+          detail: error.message,
           dismissable: true
         })
 

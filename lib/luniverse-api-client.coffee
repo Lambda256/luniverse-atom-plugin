@@ -1,4 +1,6 @@
 request = require 'request'
+Rx = require 'rxjs'
+rp = require 'request-promise'
 
 module.exports =
 class LuniverseApiClient
@@ -9,28 +11,26 @@ class LuniverseApiClient
   @setToken: (token) ->
     LuniverseApiClient.token = token
 
-  @login: (email, password, callback) ->
+  @login: (email, password) ->
     options =
-      uri: @baseURL + "/accounts/token"
+      uri: @baseURL + '/accounts/token'
       method: 'POST'
-      form: {email: email, password: password}
+      form: {
+        email: email,
+        password: password
+      }
+      json: true
 
-    request options, (error, res, body) ->
-      console.log(res)
-      console.log(body)
-      if not error and res.statusCode is 200
-        try
-          response = JSON.parse(body)
-        catch
-          console.log "Error: Invalid JSON"
-          response = null
-        finally
-          LuniverseApiClient.token = response.data.token
-          callback(response)
-      else
-        console.log "Error: #{error}", "Result: ", res
-        response = JSON.parse(body)
-        callback(response)
+    req = rp(options)
+
+    Rx.from(req)
+      .subscribe(
+        (res) ->
+          console.log('subscribe, token: ', res.data.token)
+          LuniverseApiClient.token = res.data.token
+      )
+
+    return req
 
   @securityAssessment: (contractName, contentType, code, callback) ->
     console.log("API Client Security Assessment")
