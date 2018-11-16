@@ -6,7 +6,7 @@ module.exports =
 class LuniverseApiClient
 
   # Properties
-  @baseURL = "https://pre-be.luniverse.io/api"
+  @baseURL = "https://dev-be.luniverse.io/api"
 
   @setToken: (token) ->
     LuniverseApiClient.token = token
@@ -86,29 +86,32 @@ class LuniverseApiClient
     #     response = null
     #     callback(response)
 
-  @getChainList: (callback) ->
+  @getChainList: ->
     console.log(@baseURL + '/common-service/chains/')
 
     options =
       uri: @baseURL + '/common-service/chains/'
       method: 'GET'
       headers: {'dbs-auth-token': LuniverseApiClient.token}
+      json: true
 
-    request options, (error, res, body) ->
-      if not error and res.statusCode is 200
-        try
-          response = JSON.parse(body)
-        catch
-          console.log "Error: Invalid JSON"
-          response = null
-        finally
-          callback(response)
-      else
-        console.log "Error: #{error}", "Result: ", res
-        response = null
-        callback(response)
+    return rp(options)
 
-  @createContract: (chainId, name, description, abi, bytecode, params, callback) ->
+    # request options, (error, res, body) ->
+    #   if not error and res.statusCode is 200
+    #     try
+    #       response = JSON.parse(body)
+    #     catch
+    #       console.log "Error: Invalid JSON"
+    #       response = null
+    #     finally
+    #       callback(response)
+    #   else
+    #     console.log "Error: #{error}", "Result: ", res
+    #     response = null
+    #     callback(response)
+
+  @createContract: (chainId, name, description, abi, bytecode, params) ->
     console.log(@baseURL + '/common-service/chains/' + chainId + '/contracts')
     formData = {name: name, description: description, abi: JSON.stringify(abi), bytecode: bytecode, params: JSON.stringify(params)}
 
@@ -117,17 +120,20 @@ class LuniverseApiClient
       method: 'POST'
       form: formData
       headers: {'Content-Type': 'application/json', 'dbs-auth-token': LuniverseApiClient.token}
+      json: true
 
-    request options, (error, res, body) ->
-      if not error and res.statusCode is 200
-        try
-          response = JSON.parse(body)
-        catch
-          console.log "Error: Invalid JSON"
-          response = null
-        finally
-          callback(response)
-      else
-        console.log "Error: #{error}", "Result: ", res
-        response = null
-        callback(response)
+    return rp(options)
+
+    # request options, (error, res, body) ->
+    #   if not error and res.statusCode is 200
+    #     try
+    #       response = JSON.parse(body)
+    #     catch
+    #       console.log "Error: Invalid JSON"
+    #       response = null
+    #     finally
+    #       callback(response)
+    #   else
+    #     console.log "Error: #{error}", "Result: ", res
+    #     response = null
+    #     callback(response)
