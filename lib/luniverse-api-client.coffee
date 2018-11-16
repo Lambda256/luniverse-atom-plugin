@@ -1,4 +1,3 @@
-request = require 'request'
 Rx = require 'rxjs'
 rp = require 'request-promise'
 
@@ -26,7 +25,6 @@ class LuniverseApiClient
     Rx.from(req)
       .subscribe(
         (res) ->
-          console.log('subscribe, token: ', res.data.token)
           LuniverseApiClient.token = res.data.token
       )
 
@@ -47,20 +45,6 @@ class LuniverseApiClient
 
     return rp(options)
 
-    # request options, (error, res, body) ->
-    #   if not error and res.statusCode is 200
-    #     try
-    #       response = JSON.parse(body)
-    #     catch
-    #       console.log "Error: Invalid JSON"
-    #       response = null
-    #     finally
-    #       callback(response)
-    #   else
-    #     console.log "Error: #{error}", "Result: ", res
-    #     response = null
-    #     callback(response)
-
   @securityAssessmentReports: (page, callback) ->
     console.log('/common-service/security/assessment/reports?page=' + page)
 
@@ -72,20 +56,6 @@ class LuniverseApiClient
 
     return rp(options)
 
-    # request options, (error, res, body) ->
-    #   if not error and res.statusCode is 200
-    #     try
-    #       response = JSON.parse(body)
-    #     catch
-    #       console.log "Error: Invalid JSON"
-    #       response = null
-    #     finally
-    #       callback(response)
-    #   else
-    #     console.log "Error: #{error}", "Result: ", res
-    #     response = null
-    #     callback(response)
-
   @getChainList: ->
     console.log(@baseURL + '/common-service/chains/')
 
@@ -96,20 +66,6 @@ class LuniverseApiClient
       json: true
 
     return rp(options)
-
-    # request options, (error, res, body) ->
-    #   if not error and res.statusCode is 200
-    #     try
-    #       response = JSON.parse(body)
-    #     catch
-    #       console.log "Error: Invalid JSON"
-    #       response = null
-    #     finally
-    #       callback(response)
-    #   else
-    #     console.log "Error: #{error}", "Result: ", res
-    #     response = null
-    #     callback(response)
 
   @createContract: (chainId, name, description, abi, bytecode, params) ->
     console.log(@baseURL + '/common-service/chains/' + chainId + '/contracts')
@@ -123,17 +79,3 @@ class LuniverseApiClient
       json: true
 
     return rp(options)
-
-    # request options, (error, res, body) ->
-    #   if not error and res.statusCode is 200
-    #     try
-    #       response = JSON.parse(body)
-    #     catch
-    #       console.log "Error: Invalid JSON"
-    #       response = null
-    #     finally
-    #       callback(response)
-    #   else
-    #     console.log "Error: #{error}", "Result: ", res
-    #     response = null
-    #     callback(response)

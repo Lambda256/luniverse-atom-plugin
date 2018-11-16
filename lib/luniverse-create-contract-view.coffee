@@ -62,25 +62,18 @@ class LuniverseCreateContractView extends View
         params.push {name: paramField.inputInfo.name, type: paramField.inputInfo.type, val: paramField.getText()}
 
       LuniverseApiClient.createContract chainId, name, description, abi, bytecode, params
-        .then (res) =>
+        .then (res) ->
           if res.code is 'OK'
             atom.notifications.addSuccess('Contract Deploy 요청이 완료되었습니다!')
           else
             throw new Error(res.message)
-        .catch (res) =>
+        .catch (res) ->
           atom.notifications.addError('Contract Deploy가 실패했습니다.', {
             detail: error.message,
             dismissable: true
           })
         .then (res) =>
           @dismissPanel()
-
-
-      # , (response) =>
-      #   console.log(response)
-      #   if response.code is 'OK'
-      #     @dismissPanel()
-      #     atom.notifications.addSuccess('Contract Deploy 요청이 완료되었습니다!')
 
     @contractSelector.on 'change', (e) =>
       console.log($(e.target).val())
@@ -114,26 +107,13 @@ class LuniverseCreateContractView extends View
           @chainSelector.focus()
         else
           throw new Error(res.message)
-      .catch (error) =>
+      .catch (error) ->
         atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다', {
           detail: error.message,
           dismissable: true
         })
       .then =>
         @progressIndicator.hide()
-
-     # (response) =>
-     #  console.log('getChainList response')
-     #  console.log(response)
-     #  if response == null
-     #    atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다')
-     #  else
-     #    console.log('response is not null')
-     #    @initializeSelectBox @chainSelector, 'Select your Luniverse-Chain'
-     #    for chain in response.data.chains
-     #      @chainSelector.append new Option(chain.name, chain.chainId)
-     #    @chainSelector.focus()
-     #  @progressIndicator.hide()
 
   dismissPanel: ->
     console.log('dismissPanel')

@@ -95,21 +95,11 @@ module.exports =
             @checkSecurityAssessmentReports()
           else
             throw new Error(res.message)
-        .catch (error) =>
+        .catch (error) ->
           atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다', {
             detail: error.message,
             dismissable: true
           })
-
-      #
-      # (response) =>
-      #   console.log(response)
-      #   if response == null
-      #     atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다')
-      #   else
-      #     console.log('response is not null')
-      #     atom.notifications.addSuccess('Luniverse Security Assessment 요청이 완료되었습니다!')
-      #     @checkSecurityAssessmentReports()
 
   compileContract: ->
     projectPath = helper.getUserPath()
@@ -148,14 +138,11 @@ module.exports =
           @showResults res.data.reports
         else
           throw new Error(res.message)
-      .catch (error) =>
+      .catch (error) ->
         atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다', {
           detail: error.message,
           dismissable: true
         })
-    # , (response) =>
-    #   console.log(response)
-    #   @showResults response.data.reports
 
   showResults: (reportsJson) ->
     uri = 'luniverse://audit-list'
