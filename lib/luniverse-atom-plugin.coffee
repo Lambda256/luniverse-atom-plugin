@@ -73,7 +73,7 @@ module.exports =
         if res.result && res.data.token
           atom.notifications.addSuccess('Luniverse 로그인 완료. Luniverse Api를 사용가능합니다.')
         else
-          throw new Error(response.message)
+          throw new Error(res.message)
       .catch (err) =>
         @openSetting()
         atom.notifications.addError('Luniverse 로그인 실패', {
@@ -88,14 +88,28 @@ module.exports =
     editor = atom.workspace.getActiveTextEditor()
     if editor
       totalCode = editor.getText()
-      LuniverseApiClient.securityAssessment 'Atom Request Code', 'code', totalCode, (response) =>
-        console.log(response)
-        if response == null
-          atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다')
-        else
-          console.log('response is not null')
-          atom.notifications.addSuccess('Luniverse Security Assessment 요청이 완료되었습니다!')
-          @checkSecurityAssessmentReports()
+      LuniverseApiClient.securityAssessment('Atom Request Code', 'code', totalCode)
+        .then (res) =>
+          if res.result
+            atom.notifications.addSuccess('Luniverse Security Assessment 요청이 완료되었습니다!')
+            @checkSecurityAssessmentReports()
+          else
+            throw new Error(res.message)
+        .catch (error) =>
+          atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다', {
+            detail: error.message,
+            dismissable: true
+          })
+
+      #
+      # (response) =>
+      #   console.log(response)
+      #   if response == null
+      #     atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다')
+      #   else
+      #     console.log('response is not null')
+      #     atom.notifications.addSuccess('Luniverse Security Assessment 요청이 완료되었습니다!')
+      #     @checkSecurityAssessmentReports()
 
   compileContract: ->
     projectPath = helper.getUserPath()
@@ -128,9 +142,20 @@ module.exports =
 
   checkSecurityAssessmentReports: ->
     console.log('checkSecurityAssessmentReports')
-    LuniverseApiClient.securityAssessmentReports 1, (response) =>
-      console.log(response)
-      @showResults response.data.reports
+    LuniverseApiClient.securityAssessmentReports 1
+      .then (res) =>
+        if res.result && res.data.reports
+          @showResults res.data.reports
+        else
+          throw new Error(res.message)
+      .catch (error) =>
+        atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다', {
+          detail: error.message,
+          dismissable: true
+        })
+    # , (response) =>
+    #   console.log(response)
+    #   @showResults response.data.reports
 
   showResults: (reportsJson) ->
     uri = 'luniverse://audit-list'

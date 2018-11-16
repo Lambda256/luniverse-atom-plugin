@@ -6,7 +6,7 @@ module.exports =
 class LuniverseApiClient
 
   # Properties
-  @baseURL = "https://dev-be.luniverse.io/api"
+  @baseURL = "https://pre-be.luniverse.io/api"
 
   @setToken: (token) ->
     LuniverseApiClient.token = token
@@ -32,28 +32,34 @@ class LuniverseApiClient
 
     return req
 
-  @securityAssessment: (contractName, contentType, code, callback) ->
+  @securityAssessment: (contractName, contentType, code) ->
     console.log("API Client Security Assessment")
     console.log(LuniverseApiClient.token)
+    console.log(contractName)
+    console.log(contentType)
+    console.log(code)
     options =
       uri: @baseURL + '/common-service/security/assessment'
       method: 'POST'
       form: {contractName: contractName, contentType: contentType, code: code}
       headers: {'Content-Type': 'application/x-www-form-urlencoded', 'dbs-auth-token': LuniverseApiClient.token}
+      json: true
 
-    request options, (error, res, body) ->
-      if not error and res.statusCode is 200
-        try
-          response = JSON.parse(body)
-        catch
-          console.log "Error: Invalid JSON"
-          response = null
-        finally
-          callback(response)
-      else
-        console.log "Error: #{error}", "Result: ", res
-        response = null
-        callback(response)
+    return rp(options)
+
+    # request options, (error, res, body) ->
+    #   if not error and res.statusCode is 200
+    #     try
+    #       response = JSON.parse(body)
+    #     catch
+    #       console.log "Error: Invalid JSON"
+    #       response = null
+    #     finally
+    #       callback(response)
+    #   else
+    #     console.log "Error: #{error}", "Result: ", res
+    #     response = null
+    #     callback(response)
 
   @securityAssessmentReports: (page, callback) ->
     console.log('/common-service/security/assessment/reports?page=' + page)
@@ -62,20 +68,23 @@ class LuniverseApiClient
       uri: @baseURL + '/common-service/security/assessment/reports?page=' + page
       method: 'GET'
       headers: {'dbs-auth-token': LuniverseApiClient.token}
+      json: true
 
-    request options, (error, res, body) ->
-      if not error and res.statusCode is 200
-        try
-          response = JSON.parse(body)
-        catch
-          console.log "Error: Invalid JSON"
-          response = null
-        finally
-          callback(response)
-      else
-        console.log "Error: #{error}", "Result: ", res
-        response = null
-        callback(response)
+    return rp(options)
+
+    # request options, (error, res, body) ->
+    #   if not error and res.statusCode is 200
+    #     try
+    #       response = JSON.parse(body)
+    #     catch
+    #       console.log "Error: Invalid JSON"
+    #       response = null
+    #     finally
+    #       callback(response)
+    #   else
+    #     console.log "Error: #{error}", "Result: ", res
+    #     response = null
+    #     callback(response)
 
   @getChainList: (callback) ->
     console.log(@baseURL + '/common-service/chains/')
