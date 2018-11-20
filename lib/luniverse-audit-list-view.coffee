@@ -61,14 +61,14 @@ class LuniverseAuditListView extends ScrollView
         @h2 class: 'title', =>
           @span id: "question-link-#{reportId}", class: 'underline title-string', title
           # Added tooltip to explain that the value is the number of votes
-          @div class: 'score', title: 0 + ' Votes', =>
-            @p 0
+          # @div class: 'score', title: 0 + ' Votes', =>
+          #   @p 0
           # Added a new badge for showing the total number of answers, and a tooltip to explain that the value is the number of answers
-          @div class: 'answers', title: 0 + ' Answers', =>
-            @p 0
+          # @div class: 'answers', title: 0 + ' Answers', =>
+          #   @p 0
           # Added a check mark to show that the question has an accepted answer
-          @div class: 'is-accepted', =>
-            @p class: 'icon icon-check', title: 'This question has an accepted answer' if true
+          # @div class: 'is-accepted', =>
+          #   @p class: 'icon icon-check', title: 'This question has an accepted answer' if true
         @div class: 'created', =>
           @text new Date(question['createdAt']).toLocaleString()
           # Added credits of who asked the question, with a link back to their profile
@@ -80,12 +80,13 @@ class LuniverseAuditListView extends ScrollView
       id: "toggle-#{question['question_id']}",
       type: 'button',
       class: 'btn btn-info btn-xs',
-      text: 'Show More'
+      text: 'Button'
     })
     toggleBtn.attr('data-toggle', 'collapse')
     toggleBtn.attr('data-target', "#question-body-#{question['reportId']}")
 
     html = $(questionHeader).find('.collapse-button').append(toggleBtn).parent()
+    # html = $(questionHeader).find('.collapse-button').parent()
     @resultsView.append(html)
     return
 
