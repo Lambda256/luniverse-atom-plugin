@@ -36,6 +36,7 @@ Atom에서 [Cmd+Shift+P]로 Window: Reload를 한 후에 Packages > Luniverse-At
 * :fire: - `:fire:` code, comment, feature 등 삭제
 * :construction: - `:construction:` 아직 진행중인 작업
 * :art: - `:art:` 코드 퀄리티 및 프로젝트 개선. (ex: refactoring)
+* :lipstick: - `:lipstick` UI 수정 및 개선
 * :shirt: - `:shirt:` linter Warning 제거
 * :bug: - `:bug:` 버그 수정 및 해결
 * :heavy_plus_sign: - `:heavy_plus_sign:` dependency, library 추가
