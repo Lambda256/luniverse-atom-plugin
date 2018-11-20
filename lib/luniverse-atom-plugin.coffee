@@ -100,7 +100,7 @@ module.exports =
     editor = atom.workspace.getActiveTextEditor()
     if editor
       totalCode = editor.getText()
-      LuniverseApiClient.securityAssessment('Atom Demo', 'Demo Test', totalCode)
+      LuniverseApiClient.securityAssessment('Atom Demo', 'code', totalCode)
         .then (res) =>
           if res.result
             atom.notifications.addSuccess('Luniverse Security Assessment 요청이 완료되었습니다!')
