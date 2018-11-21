@@ -6,3 +6,6 @@ module.exports =
       if dir.contains filePath
         projectPath = dir.path
     return projectPath
+
+  getUserFilePath: ->
+    return atom.workspace.getActivePaneItem().buffer.file.path
