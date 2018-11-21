@@ -79,3 +79,23 @@ class LuniverseApiClient
       json: true
 
     return rp(options)
+
+  @compileContract: (sourcecode, chainId = 0) ->
+    options =
+      uri: @baseURL + '/' + chainId  + '/contract/files'
+      method: 'POST'
+      form: {sourcecode: sourcecode}
+      headers: {'dbs-auth-token': LuniverseApiClient.token}
+      json: true
+
+    return rp(options)
+
+  @requestDeploy: (chainId, name, description, contractFileId, contract) ->
+    options =
+      uri: @baseURL + '/common-service/chain-contract/create'
+      method: 'POST'
+      form: {chainId: chainId, name: name, description: description, contractFileId: contractFileId, contract: contract}
+      headers: {'dbs-auth-token': LuniverseApiClient.token}
+      json: true
+
+    return rp(options)

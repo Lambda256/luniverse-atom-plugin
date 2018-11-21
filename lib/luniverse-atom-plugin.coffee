@@ -1,6 +1,8 @@
 # solc = require 'solc'
+path = require 'path'
 url = require 'url'
 shell = require 'shelljs'
+fs = require 'fs'
 { Subject } = require 'rxjs'
 { debounceTime } = require 'rxjs/operators'
 
@@ -17,6 +19,8 @@ module.exports =
 
   activate: (state) ->
     @subscriptions = new CompositeDisposable
+
+    helper.getUserPath()
 
     shell.config.execPath = shell.which('node').stdout
     atom.config.onDidChange "luniverse-atom-plugin.accountEmail", ({ newValue }) =>
@@ -101,6 +105,26 @@ module.exports =
   mergeSolidity: ->
     if shell.exec(__dirname + '/../node_modules/sol-merger/bin/sol-merger.js ' + helper.getUserFilePath()).code is 0
       atom.notifications.addSuccess('Merge 성공!')
+      filePath = atom.workspace.getActivePaneItem().buffer.file.path
+      extname = path.extname(filePath)
+      mergedFile = path.join(
+        path.dirname(filePath),
+        path.basename(filePath, extname) + '_merged' + extname
+      )
+      console.log(mergedFile)
+      sourcecode = fs.readFileSync(mergedFile, 'utf8')
+      LuniverseApiClient.compileContract sourcecode
+        .then (res) ->
+          console.log(res)
+          if res.result
+            atom.notifications.addSuccess('Contract Compile 완료. Luniverse를 통해 Deploy 요청이 가능합니다.')
+          else
+            throw new Error(res.message)
+        .catch (error) ->
+          atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다', {
+            detail: error.message,
+            dismissable: true
+          })
     else
       atom.notifications.addError('Merge 실패!')
 
