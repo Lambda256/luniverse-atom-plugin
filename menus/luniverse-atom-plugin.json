@@ -1,6 +1,7 @@
 {
   "context-menu": {
     "atom-text-editor": [
+      {"type": "separator"},
       {
         "label": "Create Audit",
         "command": "luniverse-api:create-audit"
@@ -12,7 +13,8 @@
       {
         "label": "Merge Current .sol file",
         "command": "luniverse:merge-solidity"
-      }
+      },
+      {"type": "separator"}
     ]
   },
   "menu": [
