@@ -15,6 +15,8 @@ module.exports =
   activate: (state) ->
     @subscriptions = new CompositeDisposable
 
+    shell.config.execPath = shell.which('node').stdout
+
     # If email changed -> signin again
     @subscriptions.add atom.config.onDidChange "luniverse-atom-plugin.accountEmail", ({ newEmail }) =>
       @signInLuniverse newEmail, atom.config.get('luniverse-atom-plugin.accountPassword')
@@ -38,6 +40,8 @@ module.exports =
 
     @subscriptions.add atom.commands.add 'atom-workspace',
       'luniverse:open-setting', => @openSetting()
+
+    @subscriptions.add atom.commands.add 'atom-workspace', 'luniverse:merge-solidity', => @mergeSolidity()
 
     @subscriptions.add atom.commands.add @luniverseCreateContractView.element,
       'luniverse:dismiss-panel', => @luniverseCreateContractView.dismissPanel()
@@ -84,6 +88,12 @@ module.exports =
   openSetting: ->
     atom.workspace.open('atom://config/packages/luniverse-atom-plugin')
 
+  mergeSolidity: ->
+    if shell.exec(__dirname + '/../node_modules/sol-merger/bin/sol-merger.js ' + helper.getUserFilePath()).code is 0
+      atom.notifications.addSuccess('Merge 성공!')
+    else
+      atom.notifications.addError('Merge 실패!')
+
   createAudit: ->
     editor = atom.workspace.getActiveTextEditor()
     if editor
@@ -104,7 +114,7 @@ module.exports =
   compileContract: ->
     projectPath = helper.getUserPath()
 
-    shell.config.execPath = shell.which('node').stdout
+    # shell.config.execPath = shell.which('node').stdout
     shell.cd(projectPath)
 
     compileResult = shell.exec('./node_modules/.bin/truffle compile')
