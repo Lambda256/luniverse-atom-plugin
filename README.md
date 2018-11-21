@@ -29,16 +29,19 @@ Atom에서 [Cmd+Shift+P]로 Window: Reload를 한 후에 Packages > Luniverse-At
 ```
 
 ## Commit Message With Emoji
-* :sparkles: - `:sparkles:` 기능 추가
-* :card_index: - `:card_index:` 텍스트 수정, typo 해결
-* :wrench: - `:wrench:` script 및 tool 수정
-* :back: - `:back:` rollback
-* :fire: - `:fire:` code, comment, feature 등 삭제
-* :construction: - `:construction:` 아직 진행중인 작업
-* :art: - `:art:` 코드 퀄리티 및 프로젝트 개선. (ex: refactoring)
-* :lipstick: - `:lipstick` UI 수정 및 개선
-* :shirt: - `:shirt:` linter Warning 제거
-* :bug: - `:bug:` 버그 수정 및 해결
-* :heavy_plus_sign: - `:heavy_plus_sign:` dependency, library 추가
-* :heavy_minus_sign: - `:heavy_minus_sign:` dependency, library 제거
-* :twisted_rightwards_arrows: - `:twisted_rightwards_arrows:` git branch merge 작업
+
+|   Commit type              | Emoji                                         |
+|:---------------------------|:----------------------------------------------|
+| 기능 추가                    | :sparkles: `:sparkles:`                       |
+| 텍스트 수정, typo 해결         | :card_index: `:card_index:`                   |
+| script 및 tool 수정          | :wrench: - `:wrench:`                       |
+| 버그 수정 및 해결              | :bug: `:bug:`                                 |
+| Reverting changes          | :rewind: `:rewind:`                           |
+| code/files 삭제             | :fire: `:fire:`                               |
+| Work in progress           | :construction:  `:construction:`              |
+| Improve format/structure   | :art: `:art:`                                 |
+| UI 수정 및 개선               | :lipstick: `:lipstick:`                       |
+| Lint 해결                   | :shirt: `:shirt:`                             |
+| Adding a dependency        | :heavy_plus_sign: `:heavy_plus_sign:`         |
+| Removing a dependency      | :heavy_minus_sign: `:heavy_minus_sign:`       |
+| Merging branches           | :twisted_rightwards_arrows: `:twisted_rightwards_arrows:` |
