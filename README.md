@@ -41,3 +41,4 @@ Atom에서 [Cmd+Shift+P]로 Window: Reload를 한 후에 Packages > Luniverse-At
 * :bug: - `:bug:` 버그 수정 및 해결
 * :heavy_plus_sign: - `:heavy_plus_sign:` dependency, library 추가
 * :heavy_minus_sign: - `:heavy_minus_sign:` dependency, library 제거
+* :twisted_rightwards_arrows: - `:twisted_rightwards_arrows:` git branch merge 작업
