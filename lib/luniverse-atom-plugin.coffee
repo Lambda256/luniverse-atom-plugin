@@ -1,6 +1,8 @@
 # solc = require 'solc'
 url = require 'url'
 shell = require 'shelljs'
+{ Subject } = require 'rxjs'
+{ debounceTime } = require 'rxjs/operators'
 
 helper = require './luniverse-helper-functions'
 LuniverseCreateContractView = require './luniverse-create-contract-view'
@@ -11,19 +13,23 @@ LuniverseAuditListView = require './luniverse-audit-list-view'
 
 module.exports =
   luniverseCreateContractView: null
+  inputSubject: new Subject()
 
   activate: (state) ->
     @subscriptions = new CompositeDisposable
 
     shell.config.execPath = shell.which('node').stdout
+    atom.config.onDidChange "luniverse-atom-plugin.accountEmail", ({ newValue }) =>
+      @inputSubject.next(newValue)
 
-    # If email changed -> signin again
-    @subscriptions.add atom.config.onDidChange "luniverse-atom-plugin.accountEmail", ({ newEmail }) =>
-      @signInLuniverse newEmail, atom.config.get('luniverse-atom-plugin.accountPassword')
+    atom.config.onDidChange "luniverse-atom-plugin.accountPassword", ({ newValue }) =>
+      @inputSubject.next(newValue)
 
-    # If password changed -> signin again
-    @subscriptions.add atom.config.onDidChange "luniverse-atom-plugin.accountPassword", ({ newPassword }) =>
-      @signInLuniverse atom.config.get('luniverse-atom-plugin.accountEmail'), newPassword
+    @inputSubject
+      .asObservable()
+      .pipe(debounceTime(1000))
+      .subscribe (newEmail) =>
+        @signInLuniverse atom.config.get('luniverse-atom-plugin.accountEmail'), atom.config.get('luniverse-atom-plugin.accountPassword')
 
     @signInLuniverse atom.config.get('luniverse-atom-plugin.accountEmail'), atom.config.get('luniverse-atom-plugin.accountPassword')
 
@@ -72,6 +78,10 @@ module.exports =
   serialize: ->
 
   signInLuniverse: (email, password) ->
+    if email is '' || password is ''
+      return
+    console.log('email: ', email)
+    console.log('password: ', password)
     LuniverseApiClient.login email, password
       .then (res) ->
         if res.result && res.data.token
@@ -98,7 +108,7 @@ module.exports =
     editor = atom.workspace.getActiveTextEditor()
     if editor
       totalCode = editor.getText()
-      LuniverseApiClient.securityAssessment('Atom Request Code', 'code', totalCode)
+      LuniverseApiClient.securityAssessment('Atom Demo', 'code', totalCode)
         .then (res) =>
           if res.result
             atom.notifications.addSuccess('Luniverse Security Assessment 요청이 완료되었습니다!')
