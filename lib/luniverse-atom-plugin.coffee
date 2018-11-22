@@ -20,8 +20,6 @@ module.exports =
   activate: (state) ->
     @subscriptions = new CompositeDisposable
 
-    helper.getUserPath()
-
     shell.config.execPath = shell.which('node').stdout
     atom.config.onDidChange "luniverse-atom-plugin.accountEmail", ({ newValue }) =>
       @inputSubject.next(newValue)

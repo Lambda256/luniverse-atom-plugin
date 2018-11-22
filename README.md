@@ -40,6 +40,7 @@ Atom에서 [Cmd+Shift+P]로 Window: Reload를 한 후에 Packages > Luniverse-At
 | code/files 삭제             | :fire: `:fire:`                               |
 | Work in progress           | :construction:  `:construction:`              |
 | Improve format/structure   | :art: `:art:`                                 |
+| Adding a test              | :white_check_mark: `:white_check_mark:`       |
 | UI 수정 및 개선               | :lipstick: `:lipstick:`                       |
 | Lint 해결                   | :shirt: `:shirt:`                             |
 | Adding a dependency        | :heavy_plus_sign: `:heavy_plus_sign:`         |
