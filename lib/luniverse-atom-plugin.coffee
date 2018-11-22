@@ -7,6 +7,7 @@ fs = require 'fs'
 { debounceTime } = require 'rxjs/operators'
 
 helper = require './luniverse-helper-functions'
+helperjs = require './luniverse-helper-js'
 LuniverseCreateContractView = require './luniverse-create-contract-view'
 LuniverseApiClient = require './luniverse-api-client'
 LuniverseAuditListView = require './luniverse-audit-list-view'
@@ -103,30 +104,35 @@ module.exports =
     atom.workspace.open('atom://config/packages/luniverse-atom-plugin')
 
   mergeSolidity: ->
-    if shell.exec(__dirname + '/../node_modules/sol-merger/bin/sol-merger.js ' + helper.getUserFilePath()).code is 0
-      atom.notifications.addSuccess('Merge 성공!')
-      filePath = atom.workspace.getActivePaneItem().buffer.file.path
-      extname = path.extname(filePath)
-      mergedFile = path.join(
-        path.dirname(filePath),
-        path.basename(filePath, extname) + '_merged' + extname
-      )
-      console.log(mergedFile)
-      sourcecode = fs.readFileSync(mergedFile, 'utf8')
-      LuniverseApiClient.compileContract sourcecode
-        .then (res) ->
-          console.log(res)
-          if res.result
-            atom.notifications.addSuccess('Contract Compile 완료. Luniverse를 통해 Deploy 요청이 가능합니다.')
-          else
-            throw new Error(res.message)
-        .catch (error) ->
-          atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다', {
-            detail: error.message,
-            dismissable: true
-          })
-    else
-      atom.notifications.addError('Merge 실패!')
+    helper
+      .mergedSourceCode(helper.getUserFilePath())
+      .then (result) =>
+        console.log(result)
+
+    # if shell.exec(__dirname + '/../node_modules/sol-merger/bin/sol-merger.js ' + helper.getUserFilePath()).code is 0
+    #   atom.notifications.addSuccess('Merge 성공!')
+    #   filePath = atom.workspace.getActivePaneItem().buffer.file.path
+    #   extname = path.extname(filePath)
+    #   mergedFile = path.join(
+    #     path.dirname(filePath),
+    #     path.basename(filePath, extname) + '_merged' + extname
+    #   )
+    #   console.log(mergedFile)
+    #   sourcecode = fs.readFileSync(mergedFile, 'utf8')
+    #   LuniverseApiClient.compileContract sourcecode
+    #     .then (res) ->
+    #       console.log(res)
+    #       if res.result
+    #         atom.notifications.addSuccess('Contract Compile 완료. Luniverse를 통해 Deploy 요청이 가능합니다.')
+    #       else
+    #         throw new Error(res.message)
+    #     .catch (error) ->
+    #       atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다', {
+    #         detail: error.message,
+    #         dismissable: true
+    #       })
+    # else
+    #   atom.notifications.addError('Merge 실패!')
 
   createAudit: ->
     editor = atom.workspace.getActiveTextEditor()

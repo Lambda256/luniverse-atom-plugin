@@ -1,4 +1,5 @@
 path = require('path')
+Merger = require('sol-merger/lib/merger')
 
 module.exports =
   getUserPath: ->
@@ -14,3 +15,8 @@ module.exports =
 
   getUserFilePath: ->
     return atom.workspace.getActivePaneItem().buffer.file.path
+
+  mergedSourceCode: (filePath) ->
+    merger = new Merger({ delimeter: '\n\n' })
+    result = merger.processFile(filePath, true)
+    return result
