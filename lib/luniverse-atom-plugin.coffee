@@ -7,7 +7,6 @@ fs = require 'fs'
 { debounceTime } = require 'rxjs/operators'
 
 helper = require './luniverse-helper-functions'
-helperjs = require './luniverse-helper-js'
 LuniverseCreateContractView = require './luniverse-create-contract-view'
 LuniverseApiClient = require './luniverse-api-client'
 LuniverseAuditListView = require './luniverse-audit-list-view'
