@@ -20,7 +20,6 @@ module.exports =
   activate: (state) ->
     @subscriptions = new CompositeDisposable
 
-    shell.config.execPath = shell.which('node').stdout
     atom.config.onDidChange "luniverse-atom-plugin.accountEmail", ({ newValue }) =>
       @inputSubject.next(newValue)
 
@@ -151,7 +150,7 @@ module.exports =
   compileContract: ->
     projectPath = helper.getUserPath()
 
-    # shell.config.execPath = shell.which('node').stdout
+    shell.config.execPath = shell.which('node').stdout
     shell.cd(projectPath)
 
     compileResult = shell.exec('./node_modules/.bin/truffle compile')

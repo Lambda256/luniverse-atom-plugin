@@ -27,8 +27,8 @@
   },
   "configSchema": {
     "accountEmail": {
-      "title": "Luniverse Email",
-      "description": "Your email account at Luniverse. (ex: test@luniverse.io)",
+      "title": "Access Token",
+      "description": "Get authentication token from https://dev.luniverse.io/login to use luniverse-atom-plugin",
       "type": "string",
       "default": "",
       "order": 1
