@@ -76,22 +76,6 @@ module.exports =
 
   signInLuniverse: (accessToken) ->
     LuniverseApiClient.setToken accessToken
-    # if email is '' || password is ''
-    #   return
-    # console.log('email: ', email)
-    # console.log('password: ', password)
-    # LuniverseApiClient.login email, password
-    #   .then (res) ->
-    #     if res.result && res.data.token
-    #       atom.notifications.addSuccess('Luniverse 로그인 완료. Luniverse Api를 사용가능합니다.')
-    #     else
-    #       throw new Error(res.message)
-    #   .catch (err) =>
-    #     @openSetting()
-    #     atom.notifications.addError('Luniverse 로그인 실패', {
-    #       detail: error.message,
-    #       dismissable: true
-    #     })
 
   openSetting: ->
     atom.workspace.open('atom://config/packages/luniverse-atom-plugin')

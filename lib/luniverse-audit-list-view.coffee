@@ -10,20 +10,11 @@ class LuniverseAuditListView extends ScrollView
     @div class: 'layout-atom native-key-bindings', =>
       @h1 class: 'layout-atom-title', 'Security Assessment'
       @ul id: 'results-view', class: 'list-assessment', outlet: 'resultsView'
-      # @div id: 'results-view', outlet: 'resultsView'
       @div id: 'load-more', class: 'load-more', click: 'loadMoreResults', outlet: 'loadMore', =>
         @a href: '#loadmore', =>
           @span  'Load More...'
       @div id: 'progressIndicator', class: 'progressIndicator', outlet: 'progressIndicator', =>
         @span class: 'loading loading-spinner-medium'
-
-    # @div class: 'layout-atom audit-list native-key-bindings', tabindex: -1, =>
-    #   @div id: 'results-view', outlet: 'resultsView'
-    #   @div id: 'load-more', class: 'load-more', click: 'loadMoreResults', outlet: 'loadMore', =>
-    #     @a href: '#loadmore', =>
-    #       @span  'Load More...'
-    #   @div id: 'progressIndicator', class: 'progressIndicator', outlet: 'progressIndicator', =>
-    #     @span class: 'loading loading-spinner-medium'
 
   initialize: ->
     super
@@ -54,31 +45,22 @@ class LuniverseAuditListView extends ScrollView
     if reportsJson['items'].length == 0
       this.html('<br><center>Audit list not found.</center>')
     else
-      # Render the question headers first
-      for question in reportsJson['items']
-        @renderQuestionHeader(question)
+      for report in reportsJson['items']
+        @renderReportCards(report)
 
     return
 
-
-#
-  # <div class="btns">
-  #   <a href="#" class="button-normal">Detail Report</a>
-  # </div>
-# </div>
-
-  renderQuestionHeader: (question) =>
-    # Decode title html entities
-    title = $('<div/>').html(question['reportName']).text()
+  renderReportCards: (report) =>
+    title = $('<div/>').html(report['reportName']).text()
     # Store the report id.
-    reportId = question['reportId']
+    reportId = report['reportId']
 
-    questionHeader = $$$ ->
+    reportCard = $$$ ->
       @li id: reportId, =>
         @div class: 'assessment-item', =>
           @h2 class: 'assessment-item-title', title
           @div class: 'right-utils', =>
-            @div class: 'time', new Date(question['createdAt']).toLocaleString()
+            @div class: 'time', new Date(report['createdAt']).toLocaleString()
             @a href: '#', class: 'btn-delete', =>
               @i class: 'fa fa-close'
               @span class: 'hidden', 'delete'
@@ -105,43 +87,10 @@ class LuniverseAuditListView extends ScrollView
           @div class: 'btns', =>
             @a href: 'https://dev.luniverse.io/utility/security.assessment/report', class: 'button-normal', 'Detail Report'
 
-      # @div id: question['question_id'], class: 'ui-result', =>
-      #   @h2 class: 'title', =>
-      #     @span id: "question-link-#{reportId}", class: 'underline title-string', title
-      #     # Added tooltip to explain that the value is the number of votes
-      #     # @div class: 'score', title: 0 + ' Votes', =>
-      #     #   @p 0
-      #     # Added a new badge for showing the total number of answers, and a tooltip to explain that the value is the number of answers
-      #     # @div class: 'answers', title: 0 + ' Answers', =>
-      #     #   @p 0
-      #     # Added a check mark to show that the question has an accepted answer
-      #     # @div class: 'is-accepted', =>
-      #     #   @p class: 'icon icon-check', title: 'This question has an accepted answer' if true
-      #   @div class: 'created', =>
-      #     @text new Date(question['createdAt']).toLocaleString()
-      #     # Added credits of who asked the question, with a link back to their profile
-      #     @text ' - report ID: ' + reportId
-      #   @div class: 'collapse-button'
-
-    # Space-pen doesn't seem to support the data-toggle and data-target attributes
-    toggleBtn = $('<button></button>', {
-      id: "toggle-#{question['question_id']}",
-      type: 'button',
-      class: 'btn btn-info btn-xs',
-      text: 'Button'
-    })
-    toggleBtn.attr('data-toggle', 'collapse')
-    toggleBtn.attr('data-target', "#question-body-#{question['reportId']}")
-
-    html = $(questionHeader).find('.collapse-button').append(toggleBtn).parent()
-    # html = $(questionHeader).find('.collapse-button').parent()
-    # @resultsView.append(html)
-    @resultsView.append(questionHeader)
+    @resultsView.append(reportCard)
     return
 
   loadMoreResults: ->
-    # progressIndicator = @progressIndicator
-    # renderReports = @renderReports
     if @reportsJson['page'] * @reportsJson['rpp'] < @reportsJson['count']
       @progressIndicator.show()
       @loadMore.hide()
@@ -160,10 +109,5 @@ class LuniverseAuditListView extends ScrollView
         .then =>
           @loadMore.show()
           @progressIndicator.hide()
-
-      # , (response) =>
-      #   @loadMore.show()
-      #   @progressIndicator.hide()
-      #   @renderReports(response.data.reports, true)
     else
       $('#load-more').children().children('span').text('No more results to load.')
