@@ -28,7 +28,7 @@ class LuniverseAuditListView extends ScrollView
     super
 
   getTitle: ->
-    'Luniverse Audit List'
+    'Luniverse Security Assessment'
 
   getURI: ->
     'luniverse://audit-list'
