@@ -115,11 +115,12 @@ module.exports =
             @checkSecurityAssessmentReports()
           else
             throw new Error(res.message)
-        .catch (error) ->
-          atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다', {
+        .catch (error) =>
+          atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다1', {
             detail: error.message,
             dismissable: true
           })
+          @checkSecurityAssessmentReports()
 
   compileContract: ->
     projectPath = helper.getUserPath()
@@ -159,7 +160,7 @@ module.exports =
         else
           throw new Error(res.message)
       .catch (error) ->
-        atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다', {
+        atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다2', {
           detail: error.message,
           dismissable: true
         })
@@ -167,9 +168,8 @@ module.exports =
   showResults: (reportsJson) ->
     uri = 'luniverse://audit-list'
     atom.workspace.open(uri, split: 'right', searchAllPanes: true).then (luniverseAuditListView) ->
-      console.log('luniverseAuditListView')
-      console.log(luniverseAuditListView)
       if luniverseAuditListView instanceof LuniverseAuditListView
         console.log('renderReports')
+        console.log(reportsJson)
         luniverseAuditListView.renderReports(reportsJson)
         atom.workspace.activatePreviousPane()
