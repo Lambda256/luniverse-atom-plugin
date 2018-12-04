@@ -43,7 +43,9 @@ class LuniverseApiClient
       headers: {'Content-Type': 'application/x-www-form-urlencoded', 'dbs-auth-token': LuniverseApiClient.token}
       json: true
 
-    return rp(options)
+    req = rp(options)
+    @handleAuthError req
+    return req
 
   @securityAssessmentReports: (page, callback) ->
     console.log('/common-service/security/assessment/reports?page=' + page)
@@ -54,7 +56,9 @@ class LuniverseApiClient
       headers: {'dbs-auth-token': LuniverseApiClient.token}
       json: true
 
-    return rp(options)
+    req = rp(options)
+    @handleAuthError req
+    return req
 
   @getChainList: ->
     console.log(@baseURL + '/common-service/chains/')
@@ -65,7 +69,9 @@ class LuniverseApiClient
       headers: {'dbs-auth-token': LuniverseApiClient.token}
       json: true
 
-    return rp(options)
+    req = rp(options)
+    @handleAuthError req
+    return req
 
   @createContract: (chainId, name, description, abi, bytecode, params) ->
     console.log(@baseURL + '/common-service/chains/' + chainId + '/contracts')
@@ -78,4 +84,15 @@ class LuniverseApiClient
       headers: {'Content-Type': 'application/json', 'dbs-auth-token': LuniverseApiClient.token}
       json: true
 
-    return rp(options)
+    req = rp(options)
+    @handleAuthError req
+    return req
+
+  @handleAuthError: (promise) ->
+    promise
+      .then (res) ->
+        if res.code is 'AUTH_REQUIRED'
+          atom.workspace.open('atom://config/packages/luniverse-atom-plugin')
+      .catch (error) ->
+        if error.error.code is 'AUTH_REQUIRED' || error.statusCode is 400
+          atom.workspace.open('atom://config/packages/luniverse-atom-plugin')

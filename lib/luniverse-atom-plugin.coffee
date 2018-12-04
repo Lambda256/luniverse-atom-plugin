@@ -19,19 +19,16 @@ module.exports =
     @subscriptions = new CompositeDisposable
 
     shell.config.execPath = shell.which('node').stdout
-    atom.config.onDidChange "luniverse-atom-plugin.accountEmail", ({ newValue }) =>
-      @inputSubject.next(newValue)
-
-    atom.config.onDidChange "luniverse-atom-plugin.accountPassword", ({ newValue }) =>
+    atom.config.onDidChange "luniverse-atom-plugin.accessToken", ({ newValue }) =>
       @inputSubject.next(newValue)
 
     @inputSubject
       .asObservable()
       .pipe(debounceTime(1000))
-      .subscribe (newEmail) =>
-        @signInLuniverse atom.config.get('luniverse-atom-plugin.accountEmail'), atom.config.get('luniverse-atom-plugin.accountPassword')
+      .subscribe (newToken) =>
+        @signInLuniverse atom.config.get('luniverse-atom-plugin.accessToken')
 
-    @signInLuniverse atom.config.get('luniverse-atom-plugin.accountEmail'), atom.config.get('luniverse-atom-plugin.accountPassword')
+    @signInLuniverse atom.config.get('luniverse-atom-plugin.accessToken')
 
     @luniverseCreateContractView = new LuniverseCreateContractView('')
 
@@ -77,23 +74,24 @@ module.exports =
 
   serialize: ->
 
-  signInLuniverse: (email, password) ->
-    if email is '' || password is ''
-      return
-    console.log('email: ', email)
-    console.log('password: ', password)
-    LuniverseApiClient.login email, password
-      .then (res) ->
-        if res.result && res.data.token
-          atom.notifications.addSuccess('Luniverse 로그인 완료. Luniverse Api를 사용가능합니다.')
-        else
-          throw new Error(res.message)
-      .catch (err) =>
-        @openSetting()
-        atom.notifications.addError('Luniverse 로그인 실패', {
-          detail: error.message,
-          dismissable: true
-        })
+  signInLuniverse: (accessToken) ->
+    LuniverseApiClient.setToken accessToken
+    # if email is '' || password is ''
+    #   return
+    # console.log('email: ', email)
+    # console.log('password: ', password)
+    # LuniverseApiClient.login email, password
+    #   .then (res) ->
+    #     if res.result && res.data.token
+    #       atom.notifications.addSuccess('Luniverse 로그인 완료. Luniverse Api를 사용가능합니다.')
+    #     else
+    #       throw new Error(res.message)
+    #   .catch (err) =>
+    #     @openSetting()
+    #     atom.notifications.addError('Luniverse 로그인 실패', {
+    #       detail: error.message,
+    #       dismissable: true
+    #     })
 
   openSetting: ->
     atom.workspace.open('atom://config/packages/luniverse-atom-plugin')
@@ -115,12 +113,11 @@ module.exports =
             @checkSecurityAssessmentReports()
           else
             throw new Error(res.message)
-        .catch (error) =>
-          atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다1', {
+        .catch (error) ->
+          atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다', {
             detail: error.message,
             dismissable: true
           })
-          @checkSecurityAssessmentReports()
 
   compileContract: ->
     projectPath = helper.getUserPath()
@@ -160,7 +157,7 @@ module.exports =
         else
           throw new Error(res.message)
       .catch (error) ->
-        atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다2', {
+        atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다', {
           detail: error.message,
           dismissable: true
         })
