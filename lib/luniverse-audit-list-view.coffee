@@ -7,7 +7,7 @@ require './vendor/bootstrap.min.js'
 module.exports =
 class LuniverseAuditListView extends ScrollView
   @content: ->
-    @article class: 'layout-atom', =>
+    @div class: 'layout-atom native-key-bindings', =>
       @h1 class: 'layout-atom-title', 'Security Assessment'
       @ul id: 'results-view', class: 'list-assessment', outlet: 'resultsView'
       # @div id: 'results-view', outlet: 'resultsView'
@@ -16,13 +16,14 @@ class LuniverseAuditListView extends ScrollView
           @span  'Load More...'
       @div id: 'progressIndicator', class: 'progressIndicator', outlet: 'progressIndicator', =>
         @span class: 'loading loading-spinner-medium'
+
     # @div class: 'layout-atom audit-list native-key-bindings', tabindex: -1, =>
-      # @div id: 'results-view', outlet: 'resultsView'
-      # @div id: 'load-more', class: 'load-more', click: 'loadMoreResults', outlet: 'loadMore', =>
-      #   @a href: '#loadmore', =>
-      #     @span  'Load More...'
-      # @div id: 'progressIndicator', class: 'progressIndicator', outlet: 'progressIndicator', =>
-      #   @span class: 'loading loading-spinner-medium'
+    #   @div id: 'results-view', outlet: 'resultsView'
+    #   @div id: 'load-more', class: 'load-more', click: 'loadMoreResults', outlet: 'loadMore', =>
+    #     @a href: '#loadmore', =>
+    #       @span  'Load More...'
+    #   @div id: 'progressIndicator', class: 'progressIndicator', outlet: 'progressIndicator', =>
+    #     @span class: 'loading loading-spinner-medium'
 
   initialize: ->
     super
@@ -144,9 +145,25 @@ class LuniverseAuditListView extends ScrollView
     if @reportsJson['page'] * @reportsJson['rpp'] < @reportsJson['count']
       @progressIndicator.show()
       @loadMore.hide()
-      LuniverseApiClient.securityAssessmentReports @reportsJson['page'] + 1, (response) =>
-        @loadMore.show()
-        @progressIndicator.hide()
-        @renderReports(response.data.reports, true)
+      LuniverseApiClient.securityAssessmentReports(@reportsJson['page'] + 1)
+        .then (res) =>
+          console.log(res)
+          if res.result && res.data.reports
+            @renderReports(res.data.reports, true)
+          else
+            throw new Error(res.message)
+        .catch (error) ->
+          atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다', {
+            detail: error.message,
+            dismissable: true
+          })
+        .then =>
+          @loadMore.show()
+          @progressIndicator.hide()
+
+      # , (response) =>
+      #   @loadMore.show()
+      #   @progressIndicator.hide()
+      #   @renderReports(response.data.reports, true)
     else
       $('#load-more').children().children('span').text('No more results to load.')
