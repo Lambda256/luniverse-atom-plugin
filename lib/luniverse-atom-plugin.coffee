@@ -1,6 +1,4 @@
-# solc = require 'solc'
 url = require 'url'
-shell = require 'shelljs'
 { Subject } = require 'rxjs'
 { debounceTime } = require 'rxjs/operators'
 
@@ -18,7 +16,6 @@ module.exports =
   activate: (state) ->
     @subscriptions = new CompositeDisposable
 
-    shell.config.execPath = shell.which('node').stdout
     atom.config.onDidChange "luniverse-atom-plugin.accessToken", ({ newValue }) =>
       @inputSubject.next(newValue)
 
@@ -113,10 +110,6 @@ module.exports =
               detail: error.message,
               dismissable: true
             })
-
-  deployContract: ->
-    projectPath = helper.getUserPath()
-    @luniverseCreateContractView.presentPanel shell.ls(projectPath + '/build/contracts')
 
   checkSecurityAssessmentReports: ->
     console.log('checkSecurityAssessmentReports')
