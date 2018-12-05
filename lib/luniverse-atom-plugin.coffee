@@ -1,8 +1,6 @@
 # solc = require 'solc'
-path = require 'path'
 url = require 'url'
 shell = require 'shelljs'
-fs = require 'fs'
 { Subject } = require 'rxjs'
 { debounceTime } = require 'rxjs/operators'
 

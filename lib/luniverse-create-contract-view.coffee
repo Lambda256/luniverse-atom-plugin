@@ -76,7 +76,7 @@ class LuniverseCreateContractView extends View
       params = []
 
       parsedABI = @parseABI @contracts[contractName].abi
-      parsedABI.forEach (elem) =>
+      parsedABI.forEach (elem) ->
         params.push {name: elem.name, type: elem.type, val: $('#' + elem.name).val()}
 
       LuniverseApiClient.requestDeploy chainId, name, description, contractFileId, contractName, params
