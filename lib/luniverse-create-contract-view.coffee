@@ -1,172 +1,16 @@
-{$, TextEditorView, View, ScrollView} = require 'atom-space-pen-views'
+{$, $$$, TextEditorView, View, ScrollView} = require 'atom-space-pen-views'
 fs = require 'fs'
 
 helper = require './luniverse-helper-functions'
 LuniverseApiClient = require './luniverse-api-client'
-
-# <aside class="layout-atom layout-popup">
-#   <h1 class="layout-atom-title">Create User Contract</h1>
-#
-#   <fieldset class="forms">
-#     <legend>create user contract</legend>
-#
-#     <div class="form-section">
-#       <label for="">Name</label>
-#       <input type="text" id="" placeholder="Enter Contract Name">
-#
-#
-#       <label for="">Description (Optional)</label>
-#       <input type="text" id="" placeholder="Enter Description">
-#     </div>
-#
-#
-#     <div class="form-section">
-#       <label for="upload-file">Contract File</label>
-#
-#       <div class="uploads">
-#         <input type="file" id="upload">
-#         <label for="upload" class="button-normal">
-#           <i class="fa fa-upload"></i>
-#           Upload Contract
-#         </label>
-#
-#         <span class="filename">Uploadfile.sol</span>
-#         <button type="button" class="btn-close">
-#           <i class="fa fa-close"></i>
-#           <span class="hidden">delete</span>
-#         </button>
-#       </div>
-#     </div>
-#
-#
-#     <div class="form-section">
-#       <label for="">
-#         Security Assessment
-#         <i class="icon-info"></i>
-# <!-- 					<span class="i i2">
-#                   <span class="ly_tooltip">Security Assessment Security Assessment Security Assessment..tooltip</span>
-#                   </span>
-# -->				</label>
-#
-#
-#       <div class="right-utils">
-#         <a href="#" class="button-normal">
-#           <i class="fa fa-code-fork"></i>
-#           Security Assessment
-#         </a>
-#       </div>
-#
-#       <table class="tbl-security-level">
-#         <caption>Security Level</caption>
-#         <tbody>
-#           <tr>
-#             <th rowspan="2" class="security-level level-c">
-#               <strong>C</strong>
-#               <span>Security Level</span>
-#             </th>
-#             <th>Critical</th>
-#             <th>High</th>
-#             <th>Medium</th>
-#             <th>Low</th>
-#             <th>Notie</th>
-#           </tr>
-#           <tr>
-#             <td>0</td>
-#             <td>0</td>
-#             <td>0</td>
-#             <td>0</td>
-#             <td>1</td>
-#           </tr>
-#         </tbody>
-#       </table>
-#     </div>
-#
-#
-#     <div class="form-section">
-#       <label for="">Contract Select</label>
-#       <select name="" id="">
-#         <option value="">Select Contract</option>
-#         <option value="">Contract 1</option>
-#         <option value="">Contract 2</option>
-#         <option value="">Contract 3</option>
-#         <option value="">Contract 4</option>
-#         <option value="">Contract 5</option>
-#       </select>
-#
-#       <label for="">Contract Select</label>
-#       <table class="tbl-form-vertical">
-#                   <colgroup>
-#                       <col style="width: 150px">
-#                       <col style="width: 150px">
-#                       <col>
-#                   </colgroup>
-#                   <thead>
-#                       <tr>
-#                           <th scope="col">Name</th>
-#                           <th scope="col">Type</th>
-#                           <th scope="col">Value</th>
-#                       </tr>
-#                   </thead>
-#                   <tbody>
-#                       <tr>
-#                           <td><input type="text" id="" disabled value="Token Name"></td>
-#                           <td><input type="text" id="" disabled value="String"></td>
-#                           <td><input type="text" id="" value="Token"></td>
-#                       </tr>
-#                       <tr>
-#                           <td><input type="text" id="" disabled value="Decimal Units"></td>
-#                           <td><input type="text" id="" disabled value="Unit8"></td>
-#                           <td><input type="text" id="" value="32"></td>
-#                       </tr>
-#                   </tbody>
-#               </table>
-#
-#
-#       <label for="">Function Description (Optional)</label>
-#       <input type="text" id="" placeholder="Enter Function Description">
-#     </div>
-#
-#
-#     <div class="btns">
-#       <button type="button" class="button-cancel">Cancel</button>
-#       <button type="submit" class="button-submit">Apply</button>
-#     </div>
-#   </fieldset>
-# </aside>
-
-
-# <table class="tbl-form-vertical">
-#   <colgroup>
-#       <col style="width: 150px">
-#       <col style="width: 150px">
-#       <col>
-#   </colgroup>
-#   <thead>
-#       <tr>
-#           <th scope="col">Name</th>
-#           <th scope="col">Type</th>
-#           <th scope="col">Value</th>
-#       </tr>
-#   </thead>
-#   <tbody>
-#       <tr>
-#           <td><input type="text" id="" disabled value="Token Name"></td>
-#           <td><input type="text" id="" disabled value="String"></td>
-#           <td><input type="text" id="" value="Token"></td>
-#       </tr>
-#       <tr>
-#           <td><input type="text" id="" disabled value="Decimal Units"></td>
-#           <td><input type="text" id="" disabled value="Unit8"></td>
-#           <td><input type="text" id="" value="32"></td>
-#       </tr>
-#   </tbody>
-# </table>
 
 module.exports =
 class LuniverseCreateContractView extends View
 
   compiledObject: null
   parameterFields: []
+  contracts: null
+  paramaterObjects: []
 
   @content: ->
     @aside class: 'layout-atom-popup layout-popup native-key-bindings', =>
@@ -185,7 +29,8 @@ class LuniverseCreateContractView extends View
           @select outlet: 'chainSelector'
           @label for: '', 'Contract Select'
           @select outlet: 'contractSelector'
-          @table class: 'tbl-form-vertical', =>
+          @label outlet: 'constructorLabel', for: '', 'Constructor Parameters'
+          @table outlet: 'constructorTable', class: 'tbl-form-vertical', =>
             @colgroup =>
               @col style: 'width: 150px'
               @col style: 'width: 150px'
@@ -195,17 +40,9 @@ class LuniverseCreateContractView extends View
                 @th scope: 'col', 'Name'
                 @th scope: 'col', 'Type'
                 @th scope: 'col', 'Value'
-            @tbody =>
-              @tr =>
-                @td =>
-                  @input type: 'text', id: '', disabled: 'true', value: 'Token Name'
-                @td =>
-                  @input type: 'text', id: '', disabled: 'true', value: 'String'
-                @td =>
-                  @input type: 'text', id: '', value: ''
-                  # @subview 'parameterField', new TextEditorView(mini: true, placeholderText: 'Enter Parameter')
-          @label for: '', 'Function Description (Optional)'
-          @input type: 'text', id: '', placeholder: 'Enter Function Description'
+            @tbody outlet: 'constructorParameters'
+          # @label for: '', 'Function Description (Optional)'
+          # @input type: 'text', id: '', placeholder: 'Enter Function Description'
           # @subview 'functionDescriptionField', new TextEditorView(mini: true, placeholderText: 'Enter Function Description')
         @div class: 'btns', =>
           @button outlet: 'cancelButton', type: 'button', class: 'button-cancel', 'Cancel'
@@ -231,6 +68,7 @@ class LuniverseCreateContractView extends View
     #         @span class: 'loading loading-spinner-medium'
 
   initialize: (serializeState) ->
+    @hideConstructorParameters()
     @handleEvents()
 
   # Returns an object that can be retrieved when package is activated
@@ -256,6 +94,7 @@ class LuniverseCreateContractView extends View
       @progressIndicator.show()
 
       chainId = @chainSelector.val()
+      contractName = @contractSelector.val()
       name = @compiledObject.contractName
       description = 'description example'
       abi = @compiledObject.abi
@@ -280,13 +119,50 @@ class LuniverseCreateContractView extends View
           @dismissPanel()
 
     @contractSelector.on 'change', (e) =>
+      console.log('selector onchange')
       console.log($(e.target).val())
-      projectPath = helper.getUserPath()
-      @setConstructorParameters(projectPath + '/build/contracts/', $(e.target).val())
+      @setConstructorParameters @contracts[$(e.target).val()].abi
 
-  # presentPanel: (result)
+      # console.log($(e.target).val())
+      # projectPath = helper.getUserPath()
+      # @setConstructorParameters(projectPath + '/build/contracts/', $(e.target).val())
 
-  presentPanel: (contractBuildArray) ->
+  presentPanel: (data) ->
+    console.log('presentPanel')
+    console.log(data)
+    contractFileId = data.contractFile.contractFileId
+    @contracts = data.contractFile.contracts
+
+    @panel ?= atom.workspace.addModalPanel(item: @, visible: true)
+    @panel.show()
+    @progressIndicator.show()
+
+    @initializeSelectBox @contractSelector, 'Select your compiled contract file'
+    Object.keys(data.contractFile.contracts).forEach (key) =>
+      console.log(key, data.contractFile.contracts[key])
+      @contractSelector.append new Option(key, key)
+
+    LuniverseApiClient.getChainList()
+      .then (res) =>
+        console.log('chains')
+        console.log(res)
+        @initializeSelectBox @chainSelector, 'Select your Luniverse-Chain'
+        if res.result
+          for chain in res.data.chains
+            @chainSelector.append new Option(chain.name, chain.chainId)
+          @chainSelector.focus()
+        else
+          throw new Error(res.message)
+      .catch (error) ->
+        atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다2', {
+          detail: error.message,
+          dismissable: true
+        })
+      .then =>
+        @progressIndicator.hide()
+
+
+  presentPanel2: (contractBuildArray) ->
     @compiledObject = null
     @parameterFields = []
 
@@ -306,6 +182,8 @@ class LuniverseCreateContractView extends View
 
     LuniverseApiClient.getChainList()
       .then (res) =>
+        console.log('chains')
+        console.log(res)
         @initializeSelectBox @chainSelector, 'Select your Luniverse-Chain'
         if res.result
           for chain in res.data.chains
@@ -314,7 +192,7 @@ class LuniverseCreateContractView extends View
         else
           throw new Error(res.message)
       .catch (error) ->
-        atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다', {
+        atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다3', {
           detail: error.message,
           dismissable: true
         })
@@ -325,7 +203,29 @@ class LuniverseCreateContractView extends View
     console.log('dismissPanel')
     this.hideView()
 
-  setConstructorParameters: (targetPath, targetContract) ->
+  setConstructorParameters: (abi) ->
+    @constructorParameters.empty()
+    parsedABI = @parseABI abi
+    if parsedABI.length > 0
+      @showConstructorParameters()
+    else
+      @hideConstructorParameters()
+    parsedABI.forEach (elem) =>
+      row = $$$ ->
+        @tr =>
+          @td =>
+            @input type: 'text', id: '', disabled: 'true', value: elem.name
+          @td =>
+            @input type: 'text', id: '', disabled: 'true', value: elem.type
+          @td =>
+            @input type: 'text', id: elem.name, value: ''
+      @constructorParameters.append row
+      # textEditor = new TextEditorView(mini:true, placeholderText: 'Enter ' + elem.name + '(' + elem.type + ') value.')
+      # textEditor.inputInfo = elem
+      # @parameterFields.push textEditor
+      # @constructorParameters.append textEditor
+
+  setConstructorParameters2: (targetPath, targetContract) ->
     data = JSON.parse(fs.readFileSync(targetPath + targetContract))
 
     @compiledObject = data
@@ -354,6 +254,14 @@ class LuniverseCreateContractView extends View
     if constructorInputs
       return constructorInputs
     return []
+
+  hideConstructorParameters: ->
+    @constructorLabel.hide()
+    @constructorTable.hide()
+
+  showConstructorParameters: ->
+    @constructorLabel.show()
+    @constructorTable.show()
 
   initializeSelectBox: (selectBox, defaultText) ->
     selectBox.empty()
