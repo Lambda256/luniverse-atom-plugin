@@ -5,10 +5,8 @@ LuniverseApiClient = require './luniverse-api-client'
 module.exports =
 class LuniverseCreateContractView extends View
 
-  compiledObject: null
   parameterFields: []
   contracts: null
-  paramaterObjects: []
   contractData: null
 
   @content: ->
@@ -103,6 +101,11 @@ class LuniverseCreateContractView extends View
   presentPanel: (data) ->
     console.log('presentPanel')
     console.log(data)
+
+    @parameterFields = []
+    @contracts = null
+    @contractData = null
+
     @contractData = data
     @contracts = data.contractFile.contracts
 
