@@ -20,19 +20,17 @@ module.exports =
   activate: (state) ->
     @subscriptions = new CompositeDisposable
 
-    atom.config.onDidChange "luniverse-atom-plugin.accountEmail", ({ newValue }) =>
-      @inputSubject.next(newValue)
-
-    atom.config.onDidChange "luniverse-atom-plugin.accountPassword", ({ newValue }) =>
+    shell.config.execPath = shell.which('node').stdout
+    atom.config.onDidChange "luniverse-atom-plugin.accessToken", ({ newValue }) =>
       @inputSubject.next(newValue)
 
     @inputSubject
       .asObservable()
       .pipe(debounceTime(1000))
-      .subscribe (newEmail) =>
-        @signInLuniverse atom.config.get('luniverse-atom-plugin.accountEmail'), atom.config.get('luniverse-atom-plugin.accountPassword')
+      .subscribe (newToken) =>
+        @signInLuniverse atom.config.get('luniverse-atom-plugin.accessToken')
 
-    @signInLuniverse atom.config.get('luniverse-atom-plugin.accountEmail'), atom.config.get('luniverse-atom-plugin.accountPassword')
+    @signInLuniverse atom.config.get('luniverse-atom-plugin.accessToken')
 
     @luniverseCreateContractView = new LuniverseCreateContractView('')
 
@@ -78,23 +76,8 @@ module.exports =
 
   serialize: ->
 
-  signInLuniverse: (email, password) ->
-    if email is '' || password is ''
-      return
-    console.log('email: ', email)
-    console.log('password: ', password)
-    LuniverseApiClient.login email, password
-      .then (res) ->
-        if res.result && res.data.token
-          atom.notifications.addSuccess('Luniverse 로그인 완료. Luniverse Api를 사용가능합니다.')
-        else
-          throw new Error(res.message)
-      .catch (err) =>
-        @openSetting()
-        atom.notifications.addError('Luniverse 로그인 실패', {
-          detail: error.message,
-          dismissable: true
-        })
+  signInLuniverse: (accessToken) ->
+    LuniverseApiClient.setToken accessToken
 
   openSetting: ->
     atom.workspace.open('atom://config/packages/luniverse-atom-plugin')
@@ -134,7 +117,7 @@ module.exports =
     editor = atom.workspace.getActiveTextEditor()
     if editor
       totalCode = editor.getText()
-      LuniverseApiClient.securityAssessment('Atom Demo', 'code', totalCode)
+      LuniverseApiClient.securityAssessment(editor.getTitle(), 'code', totalCode)
         .then (res) =>
           if res.result
             atom.notifications.addSuccess('Luniverse Security Assessment 요청이 완료되었습니다!')
@@ -193,9 +176,8 @@ module.exports =
   showResults: (reportsJson) ->
     uri = 'luniverse://audit-list'
     atom.workspace.open(uri, split: 'right', searchAllPanes: true).then (luniverseAuditListView) ->
-      console.log('luniverseAuditListView')
-      console.log(luniverseAuditListView)
       if luniverseAuditListView instanceof LuniverseAuditListView
         console.log('renderReports')
+        console.log(reportsJson)
         luniverseAuditListView.renderReports(reportsJson)
         atom.workspace.activatePreviousPane()

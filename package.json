@@ -26,19 +26,12 @@
     "husky": "^1.1.3"
   },
   "configSchema": {
-    "accountEmail": {
-      "title": "Access Token",
-      "description": "Get authentication token from https://dev.luniverse.io/login to use luniverse-atom-plugin",
+    "accessToken": {
+      "title": "Luniverse Access Token",
+      "description": "Visit https://dev.luniverse.io/auth/3rd-party/signin to generate an access token",
       "type": "string",
       "default": "",
       "order": 1
-    },
-    "accountPassword": {
-      "title": "Luniverse Password",
-      "description": "Your password at Luniverse. (ex: p@ssw0rd)",
-      "type": "string",
-      "default": "",
-      "order": 2
     }
   },
   "scripts": {
