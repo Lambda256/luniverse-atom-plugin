@@ -131,29 +131,45 @@ module.exports =
           })
 
   compileContract: ->
-    projectPath = helper.getUserPath()
+    helper
+      .mergedSourceCode(helper.getUserFilePath())
+      .then (sourcecode) =>
+        LuniverseApiClient.compileContract sourcecode
+          .then (res) =>
+            console.log(res)
+            if res.result
+              atom.notifications.addSuccess('Contract Compile 요청이 완료되었습니다!')
+            else
+              throw new Error(res.message)
+          .catch (error) ->
+            atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다', {
+              detail: error.message,
+              dismissable: true
+            })
 
-    shell.config.execPath = shell.which('node').stdout
-    shell.cd(projectPath)
-
-    compileResult = shell.exec('./node_modules/.bin/truffle compile')
-    if compileResult.code is 0
-      console.log('truffle compile success')
-      console.log(compileResult)
-      truffleNotification = atom.notifications.addSuccess('truffle compile success', {
-        buttons: [
-          {
-            className: 'btn-details',
-            onDidClick: =>
-              @deployContract()
-              truffleNotification.dismiss()
-            ,
-            text: 'Deploy through Luniverse'
-          }
-        ],
-        detail: compileResult.stdout,
-        dismissable: true
-        })
+    # projectPath = helper.getUserPath()
+    #
+    # shell.config.execPath = shell.which('node').stdout
+    # shell.cd(projectPath)
+    #
+    # compileResult = shell.exec('./node_modules/.bin/truffle compile')
+    # if compileResult.code is 0
+    #   console.log('truffle compile success')
+    #   console.log(compileResult)
+    #   truffleNotification = atom.notifications.addSuccess('truffle compile success', {
+    #     buttons: [
+    #       {
+    #         className: 'btn-details',
+    #         onDidClick: =>
+    #           @deployContract()
+    #           truffleNotification.dismiss()
+    #         ,
+    #         text: 'Deploy through Luniverse'
+    #       }
+    #     ],
+    #     detail: compileResult.stdout,
+    #     dismissable: true
+    #     })
 
   deployContract: ->
     projectPath = helper.getUserPath()

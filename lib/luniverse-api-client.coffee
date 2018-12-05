@@ -86,12 +86,13 @@ class LuniverseApiClient
 
     return rp(options)
 
-  @compileContract: (sourcecode, chainId = 0) ->
+  @compileContract: (sourcecode, chainId = '0') ->
+    console.log(@baseURL + '/chains/' + chainId  + '/contract/files')
     options =
-      uri: @baseURL + '/' + chainId  + '/contract/files'
+      uri: @baseURL + '/chains/' + chainId  + '/contract/files'
       method: 'POST'
       form: {sourcecode: sourcecode}
-      headers: {'dbs-auth-token': LuniverseApiClient.token}
+      headers: {'Content-Type': 'application/x-www-form-urlencoded', 'dbs-auth-token': LuniverseApiClient.token}
       json: true
 
     req = rp(options)
