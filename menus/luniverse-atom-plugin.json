@@ -10,10 +10,6 @@
         "label": "Compile Contract Code",
         "command": "luniverse:compile-contract"
       },
-      {
-        "label": "Merge Current .sol file",
-        "command": "luniverse:merge-solidity"
-      },
       {"type": "separator"}
     ]
   },
@@ -31,10 +27,6 @@
             {
               "label": "Compile Contract Code",
               "command": "luniverse:compile-contract"
-            },
-            {
-              "label": "Merge Current .sol file",
-              "command": "luniverse:merge-solidity"
             }
           ]
         }

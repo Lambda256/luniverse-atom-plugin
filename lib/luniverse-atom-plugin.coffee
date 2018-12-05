@@ -46,8 +46,6 @@ module.exports =
     @subscriptions.add atom.commands.add 'atom-workspace',
       'luniverse:open-setting', => @openSetting()
 
-    @subscriptions.add atom.commands.add 'atom-workspace', 'luniverse:merge-solidity', => @mergeSolidity()
-
     @subscriptions.add atom.commands.add @luniverseCreateContractView.element,
       'luniverse:dismiss-panel', => @luniverseCreateContractView.dismissPanel()
 
@@ -81,37 +79,6 @@ module.exports =
 
   openSetting: ->
     atom.workspace.open('atom://config/packages/luniverse-atom-plugin')
-
-  mergeSolidity: ->
-    helper
-      .mergedSourceCode(helper.getUserFilePath())
-      .then (result) =>
-        console.log(result)
-
-    # if shell.exec(__dirname + '/../node_modules/sol-merger/bin/sol-merger.js ' + helper.getUserFilePath()).code is 0
-    #   atom.notifications.addSuccess('Merge 성공!')
-    #   filePath = atom.workspace.getActivePaneItem().buffer.file.path
-    #   extname = path.extname(filePath)
-    #   mergedFile = path.join(
-    #     path.dirname(filePath),
-    #     path.basename(filePath, extname) + '_merged' + extname
-    #   )
-    #   console.log(mergedFile)
-    #   sourcecode = fs.readFileSync(mergedFile, 'utf8')
-    #   LuniverseApiClient.compileContract sourcecode
-    #     .then (res) ->
-    #       console.log(res)
-    #       if res.result
-    #         atom.notifications.addSuccess('Contract Compile 완료. Luniverse를 통해 Deploy 요청이 가능합니다.')
-    #       else
-    #         throw new Error(res.message)
-    #     .catch (error) ->
-    #       atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다', {
-    #         detail: error.message,
-    #         dismissable: true
-    #       })
-    # else
-    #   atom.notifications.addError('Merge 실패!')
 
   createAudit: ->
     editor = atom.workspace.getActiveTextEditor()
@@ -148,30 +115,6 @@ module.exports =
               detail: error.message,
               dismissable: true
             })
-
-    # projectPath = helper.getUserPath()
-    #
-    # shell.config.execPath = shell.which('node').stdout
-    # shell.cd(projectPath)
-    #
-    # compileResult = shell.exec('./node_modules/.bin/truffle compile')
-    # if compileResult.code is 0
-    #   console.log('truffle compile success')
-    #   console.log(compileResult)
-    #   truffleNotification = atom.notifications.addSuccess('truffle compile success', {
-    #     buttons: [
-    #       {
-    #         className: 'btn-details',
-    #         onDidClick: =>
-    #           @deployContract()
-    #           truffleNotification.dismiss()
-    #         ,
-    #         text: 'Deploy through Luniverse'
-    #       }
-    #     ],
-    #     detail: compileResult.stdout,
-    #     dismissable: true
-    #     })
 
   deployContract: ->
     projectPath = helper.getUserPath()

@@ -3,7 +3,6 @@
   'ctrl-alt-r': 'luniverse-api:security-assessment-reports'
   'ctrl-alt-c': 'luniverse:compile-contract'
   'ctrl-alt-1': 'luniverse:open-setting'
-  'ctrl-alt-m': 'luniverse:merge-solidity'
 
 '.luniverse-modal':
   'tab': 'luniverse-signin:focus-next'
