@@ -105,6 +105,7 @@ class LuniverseCreateContractView extends View
     @parameterFields = []
     @contracts = null
     @contractData = null
+    @hideConstructorParameters()
 
     @contractData = data
     @contracts = data.contractFile.contracts
