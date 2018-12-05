@@ -61,10 +61,10 @@ class LuniverseApiClient
     return req
 
   @getChainList: ->
-    console.log(@baseURL + '/common-service/chains/')
+    console.log(@baseURL + '/chains/')
 
     options =
-      uri: @baseURL + '/common-service/chains/'
+      uri: @baseURL + '/chains/'
       method: 'GET'
       headers: {'dbs-auth-token': LuniverseApiClient.token}
       json: true
@@ -100,8 +100,10 @@ class LuniverseApiClient
     return req
 
   @requestDeploy: (chainId, name, description, contractFileId, contract) ->
+    console.log(@baseURL + '/chains/' + chainId + '/contracts')
     options =
-      uri: @baseURL + '/common-service/chain-contract/create'
+      # uri: @baseURL + '/common-service/chain-contract/create'
+      uri: @baseURL + '/chains/' + chainId + '/contracts'
       method: 'POST'
       form: {chainId: chainId, name: name, description: description, contractFileId: contractFileId, contract: contract}
       headers: {'dbs-auth-token': LuniverseApiClient.token}

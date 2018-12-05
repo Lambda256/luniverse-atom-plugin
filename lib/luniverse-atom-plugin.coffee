@@ -139,6 +139,8 @@ module.exports =
             console.log(res)
             if res.result
               atom.notifications.addSuccess('Contract Compile 요청이 완료되었습니다!')
+              projectPath = helper.getUserPath()
+              @luniverseCreateContractView.presentPanel shell.ls(projectPath + '/build/contracts')
             else
               throw new Error(res.message)
           .catch (error) ->
