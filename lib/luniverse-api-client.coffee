@@ -99,13 +99,13 @@ class LuniverseApiClient
     @handleAuthError req
     return req
 
-  @requestDeploy: (chainId, name, description, contractFileId, contract) ->
+  @requestDeploy: (chainId, name, description, contractFileId, contract, params) ->
     console.log(@baseURL + '/chains/' + chainId + '/contracts')
     options =
       # uri: @baseURL + '/common-service/chain-contract/create'
       uri: @baseURL + '/chains/' + chainId + '/contracts'
       method: 'POST'
-      form: {chainId: chainId, name: name, description: description, contractFileId: contractFileId, contract: contract}
+      form: {chainId: chainId, name: name, description: description, contractFileId: contractFileId, contract: contract, params: params}
       headers: {'dbs-auth-token': LuniverseApiClient.token}
       json: true
 

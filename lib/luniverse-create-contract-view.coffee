@@ -11,6 +11,7 @@ class LuniverseCreateContractView extends View
   parameterFields: []
   contracts: null
   paramaterObjects: []
+  contractData: null
 
   @content: ->
     @aside class: 'layout-atom-popup layout-popup native-key-bindings', =>
@@ -19,10 +20,10 @@ class LuniverseCreateContractView extends View
         @legend 'create user contract'
         @div class: 'form-section', =>
           @label for: '', 'Name'
-          @input type: 'text', id: '', placeholder: 'Enter Contract Name'
+          @input outlet: 'nameField', type: 'text', id: '', placeholder: 'Enter Contract Name'
           # @subview 'nameField', new TextEditorView(mini: true, placeholderText: 'Enter Contract Name')
           @label for: '', 'Description (Optional)'
-          @input type: 'text', id: '', placeholder: 'Enter Description'
+          @input outlet: 'descriptionField', type: 'text', id: '', placeholder: 'Enter Description'
           # @subview 'descriptionField', new TextEditorView(mini: true, placeholderText: 'Enter Description')
         @div class: 'form-section', =>
           @label for: '', 'Chain Select'
@@ -95,18 +96,18 @@ class LuniverseCreateContractView extends View
 
       chainId = @chainSelector.val()
       contractName = @contractSelector.val()
-      name = @compiledObject.contractName
-      description = 'description example'
-      abi = @compiledObject.abi
-      bytecode = @compiledObject.bytecode
+      name = @nameField.val()
+      description = @descriptionField.val()
+      contractFileId = @contractData.contractFile.contractFileId
       params = []
 
-      @parameterFields.forEach (paramField) ->
-        params.push {name: paramField.inputInfo.name, type: paramField.inputInfo.type, val: paramField.getText()}
+      parsedABI = @parseABI @contracts[contractName].abi
+      parsedABI.forEach (elem) =>
+        params.push {name: elem.name, type: elem.type, val: $('#' + elem.name).val()}
 
-      LuniverseApiClient.createContract chainId, name, description, abi, bytecode, params
+      LuniverseApiClient.requestDeploy chainId, name, description, contractFileId, contractName, params
         .then (res) ->
-          if res.code is 'OK'
+          if res.result && res.code is 'OK'
             atom.notifications.addSuccess('Contract Deploy 요청이 완료되었습니다!')
           else
             throw new Error(res.message)
@@ -117,6 +118,23 @@ class LuniverseCreateContractView extends View
           })
         .then (res) =>
           @dismissPanel()
+
+      # @parameterFields.forEach (paramField) ->
+      #   params.push {name: paramField.inputInfo.name, type: paramField.inputInfo.type, val: paramField.getText()}
+
+      # LuniverseApiClient.createContract chainId, name, description, abi, bytecode, params
+      #   .then (res) ->
+      #     if res.code is 'OK'
+      #       atom.notifications.addSuccess('Contract Deploy 요청이 완료되었습니다!')
+      #     else
+      #       throw new Error(res.message)
+      #   .catch (res) ->
+      #     atom.notifications.addError('Contract Deploy가 실패했습니다.', {
+      #       detail: error.message,
+      #       dismissable: true
+      #     })
+      #   .then (res) =>
+      #     @dismissPanel()
 
     @contractSelector.on 'change', (e) =>
       console.log('selector onchange')
@@ -130,7 +148,7 @@ class LuniverseCreateContractView extends View
   presentPanel: (data) ->
     console.log('presentPanel')
     console.log(data)
-    contractFileId = data.contractFile.contractFileId
+    @contractData = data
     @contracts = data.contractFile.contracts
 
     @panel ?= atom.workspace.addModalPanel(item: @, visible: true)
