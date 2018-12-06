@@ -13,10 +13,10 @@ describe('Luniverse Helper Functions', () => {
   });
 
   it('test something', () => {
-    expect(fs.existsSync(__dirname + '/testdir/MainToken.sol')).toBe(true)
+    expect(fs.existsSync(__dirname + '/testdir/ERC20Burnable.sol')).toBe(true)
     let mergePromise = helper.mergedSourceCode(__dirname + '/testdir/MainToken.sol')
       .then((result) => {
-        expect(result).toBe(fs.readFileSync(__dirname + '/testdir/MainToken_pre_merged.sol', 'utf8'))
+        expect(result).toBe(fs.readFileSync(__dirname + '/testdir/ERC20Burnable_pre_merged.sol', 'utf8'))
       })
 
     expect('easy').toBe('easy');
