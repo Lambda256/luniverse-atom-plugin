@@ -17,7 +17,7 @@ class LuniverseCreateContractView extends View
         @div class: 'form-section', =>
           @label for: '', 'Name'
           @input outlet: 'nameField', type: 'text', id: '', placeholder: 'Enter Contract Name'
-          @label for: '', 'Description (Optional)'
+          @label for: '', 'Description'
           @input outlet: 'descriptionField', type: 'text', id: '', placeholder: 'Enter Description'
         @div class: 'form-section', =>
           @label for: '', 'Chain Select'

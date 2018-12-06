@@ -32,7 +32,7 @@ class LuniverseApiClient
 
   @securityAssessment: (contractName, contentType, code) ->
     console.log("API Client Security Assessment")
-    console.log(LuniverseApiClient.token)
+    console.log(@baseURL + '/common-service/security/assessment')
     console.log(contractName)
     console.log(contentType)
     console.log(code)
