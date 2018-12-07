@@ -1,0 +1,17 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14.005 13.997">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #8c98a4;
+      }
+
+      .cls-2 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <title>ico_info</title>
+  <path class="cls-1" d="M7,0a7,7,0,1,0,7,7A7,7,0,0,0,7,0Z"/>
+  <path class="cls-2" d="M7,2.326A1.179,1.179,0,1,1,5.837,3.5,1.169,1.169,0,0,1,7,2.326Z"/>
+  <polygon class="cls-2" points="8.979 11.838 5.416 11.838 5.416 11.131 6.177 11.131 6.177 6.332 5.031 6.332 5.031 5.723 7.84 5.723 7.84 11.131 8.979 11.131 8.979 11.838"/>
+</svg>

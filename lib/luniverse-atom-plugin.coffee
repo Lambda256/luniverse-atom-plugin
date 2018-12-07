@@ -1,6 +1,4 @@
-# solc = require 'solc'
 url = require 'url'
-shell = require 'shelljs'
 { Subject } = require 'rxjs'
 { debounceTime } = require 'rxjs/operators'
 
@@ -18,7 +16,6 @@ module.exports =
   activate: (state) ->
     @subscriptions = new CompositeDisposable
 
-    shell.config.execPath = shell.which('node').stdout
     atom.config.onDidChange "luniverse-atom-plugin.accessToken", ({ newValue }) =>
       @inputSubject.next(newValue)
 
@@ -43,8 +40,6 @@ module.exports =
 
     @subscriptions.add atom.commands.add 'atom-workspace',
       'luniverse:open-setting', => @openSetting()
-
-    @subscriptions.add atom.commands.add 'atom-workspace', 'luniverse:merge-solidity', => @mergeSolidity()
 
     @subscriptions.add atom.commands.add @luniverseCreateContractView.element,
       'luniverse:dismiss-panel', => @luniverseCreateContractView.dismissPanel()
@@ -80,12 +75,6 @@ module.exports =
   openSetting: ->
     atom.workspace.open('atom://config/packages/luniverse-atom-plugin')
 
-  mergeSolidity: ->
-    if shell.exec(__dirname + '/../node_modules/sol-merger/bin/sol-merger.js ' + helper.getUserFilePath()).code is 0
-      atom.notifications.addSuccess('Merge 성공!')
-    else
-      atom.notifications.addError('Merge 실패!')
-
   createAudit: ->
     editor = atom.workspace.getActiveTextEditor()
     if editor
@@ -104,33 +93,23 @@ module.exports =
           })
 
   compileContract: ->
-    projectPath = helper.getUserPath()
-
-    # shell.config.execPath = shell.which('node').stdout
-    shell.cd(projectPath)
-
-    compileResult = shell.exec('./node_modules/.bin/truffle compile')
-    if compileResult.code is 0
-      console.log('truffle compile success')
-      console.log(compileResult)
-      truffleNotification = atom.notifications.addSuccess('truffle compile success', {
-        buttons: [
-          {
-            className: 'btn-details',
-            onDidClick: =>
-              @deployContract()
-              truffleNotification.dismiss()
-            ,
-            text: 'Deploy through Luniverse'
-          }
-        ],
-        detail: compileResult.stdout,
-        dismissable: true
-        })
-
-  deployContract: ->
-    projectPath = helper.getUserPath()
-    @luniverseCreateContractView.presentPanel shell.ls(projectPath + '/build/contracts')
+    helper
+      .mergedSourceCode(helper.getUserFilePath())
+      .then (sourcecode) =>
+        LuniverseApiClient.compileContract sourcecode
+          .then (res) =>
+            console.log(res)
+            if res.result
+              atom.notifications.addSuccess('Contract Compile 요청이 완료되었습니다!')
+              # projectPath = helper.getUserPath()
+              @luniverseCreateContractView.presentPanel res.data
+            else
+              throw new Error(res.message)
+          .catch (error) ->
+            atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다', {
+              detail: error.message,
+              dismissable: true
+            })
 
   checkSecurityAssessmentReports: ->
     console.log('checkSecurityAssessmentReports')
