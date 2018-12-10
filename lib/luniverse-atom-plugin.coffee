@@ -93,6 +93,7 @@ module.exports =
           })
 
   compileContract: ->
+    atom.notifications.addInfo('Contract Deploy 요청중입니다...')
     helper
       .mergedSourceCode(helper.getUserFilePath())
       .then (sourcecode) =>

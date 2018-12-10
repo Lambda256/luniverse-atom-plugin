@@ -6,6 +6,7 @@ class LuniverseApiClient
 
   # Properties
   @baseURL = "https://dev-be.luniverse.io/api"
+  # @baseURL = "http://localhost:8080/api"
 
   @setToken: (token) ->
     LuniverseApiClient.token = token
@@ -101,11 +102,15 @@ class LuniverseApiClient
 
   @requestDeploy: (chainId, name, description, contractFileId, contract, params) ->
     console.log(@baseURL + '/chains/' + chainId + '/contracts')
+    formObject = {chainId: chainId, name: name, description: description, contractFileId: contractFileId, contract: contract}
+    # if params.length > 0
+    formObject.params = params
+    console.log(formObject)
     options =
       # uri: @baseURL + '/common-service/chain-contract/create'
       uri: @baseURL + '/chains/' + chainId + '/contracts'
       method: 'POST'
-      form: {chainId: chainId, name: name, description: description, contractFileId: contractFileId, contract: contract, params: params}
+      form: {chainId: chainId, name: name, description: description, contractFileId: contractFileId, contract: contract, params: JSON.stringify(params)}
       headers: {'dbs-auth-token': LuniverseApiClient.token}
       json: true
 
@@ -116,8 +121,12 @@ class LuniverseApiClient
   @handleAuthError: (promise) ->
     promise
       .then (res) ->
+        console.log('handleAuthError: then')
+        console.log(res)
         if res.code is 'AUTH_REQUIRED'
           atom.workspace.open('atom://config/packages/luniverse-atom-plugin')
       .catch (error) ->
+        console.log('handleAuthError: catch')
+        console.log(error)
         if error.error.code is 'AUTH_REQUIRED' || error.statusCode is 400
           atom.workspace.open('atom://config/packages/luniverse-atom-plugin')
