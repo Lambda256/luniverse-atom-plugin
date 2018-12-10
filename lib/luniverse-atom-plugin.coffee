@@ -90,6 +90,41 @@ module.exports =
           })
 
   compileContract: ->
+    editor = atom.workspace.getActiveTextEditor()
+    if editor && editor.isModified()
+      atom.confirm({
+        message: editor.getTitle() + ' has changes, do you want to save and compile them?',
+        detail: '',
+        buttons: ['Save and Compile', 'No']
+      },
+      (response) =>
+        if response is 0
+          # window.alert('good to hear')
+          editor.save()
+          @requestCompile()
+        else
+          # window.alert('bummer')
+      )
+    # atom.notifications.addInfo('Contract Deploy 요청중입니다...')
+    # helper
+    #   .mergedSourceCode(helper.getUserFilePath())
+    #   .then (sourcecode) =>
+    #     LuniverseApiClient.compileContract sourcecode
+    #       .then (res) =>
+    #         console.log(res)
+    #         if res.result
+    #           atom.notifications.addSuccess('Contract Compile 요청이 완료되었습니다!')
+    #           # projectPath = helper.getUserPath()
+    #           @luniverseCreateContractView.presentPanel res.data
+    #         else
+    #           throw new Error(res.message)
+    #       .catch (error) ->
+    #         atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다', {
+    #           detail: error.message,
+    #           dismissable: true
+    #         })
+
+  requestCompile: ->
     atom.notifications.addInfo('Contract Deploy 요청중입니다...')
     helper
       .mergedSourceCode(helper.getUserFilePath())
