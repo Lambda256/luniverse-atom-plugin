@@ -44,9 +44,6 @@ module.exports =
     @subscriptions.add atom.commands.add @luniverseCreateContractView.element,
       'luniverse:dismiss-panel', => @luniverseCreateContractView.dismissPanel()
 
-    @subscriptions.add atom.commands.add @luniverseCreateContractView.element,
-      'luniverse-signin:focus-next', => @luniverseCreateContractView.toggleFocus()
-
     atom.workspace.addOpener (uriToOpen) ->
       try
         {protocol, host, pathname} = url.parse(uriToOpen)

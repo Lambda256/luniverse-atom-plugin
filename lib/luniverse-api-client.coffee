@@ -128,5 +128,5 @@ class LuniverseApiClient
       .catch (error) ->
         console.log('handleAuthError: catch')
         console.log(error)
-        if error.error.code is 'AUTH_REQUIRED' || error.statusCode is 400
+        if error.error.code is 'AUTH_REQUIRED'
           atom.workspace.open('atom://config/packages/luniverse-atom-plugin')
