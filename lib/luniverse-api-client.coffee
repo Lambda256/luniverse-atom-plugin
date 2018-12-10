@@ -4,8 +4,10 @@ rp = require 'request-promise'
 module.exports =
 class LuniverseApiClient
 
+
   # Properties
   @baseURL = "https://dev-be.luniverse.io/api"
+  @TOKEN_ERROR_CODES = ['AUTH_REQUIRED', 'TOKEN_REQUIRED', 'TOKEN_INVALID', 'TOKEN_EXPIRED', 'TOKEN_OUTDATED', 'TOKEN_NOTFOUND']
   # @baseURL = "http://localhost:8080/api"
 
   @setToken: (token) ->
@@ -120,13 +122,13 @@ class LuniverseApiClient
 
   @handleAuthError: (promise) ->
     promise
-      .then (res) ->
+      .then (res) =>
         console.log('handleAuthError: then')
         console.log(res)
-        if res.code is 'AUTH_REQUIRED'
+        if res.code in @TOKEN_ERROR_CODES
           atom.workspace.open('atom://config/packages/luniverse-atom-plugin')
-      .catch (error) ->
+      .catch (error) =>
         console.log('handleAuthError: catch')
         console.log(error)
-        if error.error.code is 'AUTH_REQUIRED'
+        if error.statusCode is 401 || error.error.code in @TOKEN_ERROR_CODES
           atom.workspace.open('atom://config/packages/luniverse-atom-plugin')
