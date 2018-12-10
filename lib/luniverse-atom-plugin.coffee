@@ -105,6 +105,8 @@ module.exports =
         else
           # window.alert('bummer')
       )
+    else
+      @requestCompile()
     # atom.notifications.addInfo('Contract Deploy 요청중입니다...')
     # helper
     #   .mergedSourceCode(helper.getUserFilePath())

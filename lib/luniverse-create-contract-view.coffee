@@ -66,6 +66,7 @@ class LuniverseCreateContractView extends View
       this.hideView()
 
     @createButton.on 'click', =>
+      console.log('createButton click')
       @progressIndicator.show()
 
       chainId = @chainSelector.val()
@@ -74,6 +75,12 @@ class LuniverseCreateContractView extends View
       description = @descriptionField.val()
       contractFileId = @contractData.contractFile.contractFileId
       params = []
+      console.log(chainId)
+      console.log(name)
+      console.log(description)
+      console.log(contractFileId)
+      console.log(contractName)
+      console.log(params)
 
       parsedABI = @parseABI @contracts[contractName].abi
       parsedABI.forEach (elem) ->
@@ -85,7 +92,7 @@ class LuniverseCreateContractView extends View
             atom.notifications.addSuccess('Contract Deploy 요청이 완료되었습니다!')
           else
             throw new Error(res.message)
-        .catch (res) ->
+        .catch (error) ->
           atom.notifications.addError('Contract Deploy가 실패했습니다.', {
             detail: error.message,
             dismissable: true
