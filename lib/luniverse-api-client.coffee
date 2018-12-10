@@ -13,26 +13,6 @@ class LuniverseApiClient
   @setToken: (token) ->
     LuniverseApiClient.token = token
 
-  @login: (email, password) ->
-    options =
-      uri: @baseURL + '/accounts/token'
-      method: 'POST'
-      form: {
-        email: email,
-        password: password
-      }
-      json: true
-
-    req = rp(options)
-
-    Rx.from(req)
-      .subscribe(
-        (res) ->
-          LuniverseApiClient.token = res.data.token
-      )
-
-    return req
-
   @securityAssessment: (contractName, contentType, code) ->
     console.log("API Client Security Assessment")
     console.log(@baseURL + '/common-service/security/assessment')
@@ -76,19 +56,6 @@ class LuniverseApiClient
     @handleAuthError req
     return req
 
-  @createContract: (chainId, name, description, abi, bytecode, params) ->
-    console.log(@baseURL + '/common-service/chains/' + chainId + '/contracts')
-    formData = {name: name, description: description, abi: JSON.stringify(abi), bytecode: bytecode, params: JSON.stringify(params)}
-
-    options =
-      uri: @baseURL + '/common-service/chains/' + chainId + '/contracts'
-      method: 'POST'
-      form: formData
-      headers: {'Content-Type': 'application/json', 'dbs-auth-token': LuniverseApiClient.token}
-      json: true
-
-    return rp(options)
-
   @compileContract: (sourcecode, chainId = '0') ->
     console.log(@baseURL + '/chains/' + chainId  + '/contract/files')
     options =
@@ -104,12 +71,7 @@ class LuniverseApiClient
 
   @requestDeploy: (chainId, name, description, contractFileId, contract, params) ->
     console.log(@baseURL + '/chains/' + chainId + '/contracts')
-    formObject = {chainId: chainId, name: name, description: description, contractFileId: contractFileId, contract: contract}
-    # if params.length > 0
-    formObject.params = params
-    console.log(formObject)
     options =
-      # uri: @baseURL + '/common-service/chain-contract/create'
       uri: @baseURL + '/chains/' + chainId + '/contracts'
       method: 'POST'
       form: {chainId: chainId, name: name, description: description, contractFileId: contractFileId, contract: contract, params: JSON.stringify(params)}
@@ -123,12 +85,8 @@ class LuniverseApiClient
   @handleAuthError: (promise) ->
     promise
       .then (res) =>
-        console.log('handleAuthError: then')
-        console.log(res)
         if res.code in @TOKEN_ERROR_CODES
           atom.workspace.open('atom://config/packages/luniverse-atom-plugin')
       .catch (error) =>
-        console.log('handleAuthError: catch')
-        console.log(error)
         if error.statusCode is 401 || error.error.code in @TOKEN_ERROR_CODES
           atom.workspace.open('atom://config/packages/luniverse-atom-plugin')
