@@ -66,7 +66,6 @@ class LuniverseCreateContractView extends View
       this.hideView()
 
     @createButton.on 'click', =>
-      console.log('createButton click')
       @progressIndicator.show()
 
       chainId = @chainSelector.val()
@@ -75,12 +74,6 @@ class LuniverseCreateContractView extends View
       description = @descriptionField.val()
       contractFileId = @contractData.contractFile.contractFileId
       params = []
-      console.log(chainId)
-      console.log(name)
-      console.log(description)
-      console.log(contractFileId)
-      console.log(contractName)
-      console.log(params)
 
       parsedABI = @parseABI @contracts[contractName].abi
       parsedABI.forEach (elem) ->
@@ -101,8 +94,6 @@ class LuniverseCreateContractView extends View
           @dismissPanel()
 
     @contractSelector.on 'change', (e) =>
-      console.log('selector onchange')
-      console.log($(e.target).val())
       @setConstructorParameters @contracts[$(e.target).val()].abi
 
   presentPanel: (data) ->
@@ -138,7 +129,7 @@ class LuniverseCreateContractView extends View
         else
           throw new Error(res.message)
       .catch (error) ->
-        atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다2', {
+        atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다', {
           detail: error.message,
           dismissable: true
         })

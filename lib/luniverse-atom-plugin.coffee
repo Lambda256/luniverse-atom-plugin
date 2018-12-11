@@ -107,7 +107,7 @@ module.exports =
       @requestCompile()
 
   requestCompile: ->
-    atom.notifications.addInfo('Contract Deploy 요청중입니다...')
+    atom.notifications.addInfo('Contract Compile 요청중입니다...')
     helper
       .mergedSourceCode(helper.getUserFilePath())
       .then (sourcecode) =>
@@ -115,7 +115,7 @@ module.exports =
           .then (res) =>
             console.log(res)
             if res.result
-              atom.notifications.addSuccess('Contract Compile 요청이 완료되었습니다!')
+              atom.notifications.addSuccess('Contract Compile이 완료되었습니다!')
               @luniverseCreateContractView.presentPanel res.data
             else
               throw new Error(res.message)
@@ -126,7 +126,6 @@ module.exports =
             })
 
   checkSecurityAssessmentReports: ->
-    console.log('checkSecurityAssessmentReports')
     LuniverseApiClient.securityAssessmentReports 1
       .then (res) =>
         if res.result && res.data.reports
