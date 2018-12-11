@@ -12,11 +12,7 @@ class LuniverseApiClient
     LuniverseApiClient.token = token
 
   @securityAssessment: (contractName, contentType, code) ->
-    console.log("API Client Security Assessment")
     console.log(@baseURL + '/common-service/security/assessment')
-    console.log(contractName)
-    console.log(contentType)
-    console.log(code)
     options =
       uri: @baseURL + '/common-service/security/assessment'
       method: 'POST'
@@ -30,7 +26,6 @@ class LuniverseApiClient
 
   @securityAssessmentReports: (page, callback) ->
     console.log('/common-service/security/assessment/reports?page=' + page)
-
     options =
       uri: @baseURL + '/common-service/security/assessment/reports?page=' + page
       method: 'GET'
@@ -43,7 +38,6 @@ class LuniverseApiClient
 
   @getChainList: ->
     console.log(@baseURL + '/chains/')
-
     options =
       uri: @baseURL + '/chains/'
       method: 'GET'
