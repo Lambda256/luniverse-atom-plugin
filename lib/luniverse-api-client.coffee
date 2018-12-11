@@ -1,9 +1,7 @@
-Rx = require 'rxjs'
 rp = require 'request-promise'
 
 module.exports =
 class LuniverseApiClient
-
 
   # Properties
   @baseURL = "https://dev-be.luniverse.io/api"
