@@ -16,14 +16,14 @@ class LuniverseCreateContractView extends View
         @legend 'create user contract'
         @div class: 'form-section', =>
           @label for: '', 'Name'
-          @input outlet: 'nameField', type: 'text', id: '', placeholder: 'Enter Contract Name'
+          @input outlet: 'nameField', type: 'text', id: '', placeholder: 'Enter Contract Name', tabindex: '1'
           @label for: '', 'Description'
-          @input outlet: 'descriptionField', type: 'text', id: '', placeholder: 'Enter Description'
+          @input outlet: 'descriptionField', type: 'text', id: '', placeholder: 'Enter Description', tabindex: '2'
         @div class: 'form-section', =>
           @label for: '', 'Chain Select'
-          @select outlet: 'chainSelector'
+          @select outlet: 'chainSelector', tabindex: '3'
           @label for: '', 'Contract Select'
-          @select outlet: 'contractSelector'
+          @select outlet: 'contractSelector', tabindex: '4'
           @label outlet: 'constructorLabel', for: '', 'Constructor Parameters'
           @table outlet: 'constructorTable', class: 'tbl-form-vertical', =>
             @colgroup =>
@@ -85,7 +85,7 @@ class LuniverseCreateContractView extends View
             atom.notifications.addSuccess('Contract Deploy 요청이 완료되었습니다!')
           else
             throw new Error(res.message)
-        .catch (res) ->
+        .catch (error) ->
           atom.notifications.addError('Contract Deploy가 실패했습니다.', {
             detail: error.message,
             dismissable: true
@@ -94,8 +94,6 @@ class LuniverseCreateContractView extends View
           @dismissPanel()
 
     @contractSelector.on 'change', (e) =>
-      console.log('selector onchange')
-      console.log($(e.target).val())
       @setConstructorParameters @contracts[$(e.target).val()].abi
 
   presentPanel: (data) ->
@@ -131,7 +129,7 @@ class LuniverseCreateContractView extends View
         else
           throw new Error(res.message)
       .catch (error) ->
-        atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다2', {
+        atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다', {
           detail: error.message,
           dismissable: true
         })
@@ -149,7 +147,7 @@ class LuniverseCreateContractView extends View
       @showConstructorParameters()
     else
       @hideConstructorParameters()
-    parsedABI.forEach (elem) =>
+    parsedABI.forEach (elem, index) =>
       row = $$$ ->
         @tr =>
           @td =>
@@ -157,7 +155,7 @@ class LuniverseCreateContractView extends View
           @td =>
             @input type: 'text', id: '', disabled: 'true', value: elem.type
           @td =>
-            @input type: 'text', id: elem.name, value: ''
+            @input type: 'text', id: elem.name, value: '', tabindex: (5 + index) + ''
       @constructorParameters.append row
 
   toggleFocus: ->

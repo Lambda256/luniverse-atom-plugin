@@ -5,5 +5,4 @@
   'ctrl-alt-1': 'luniverse:open-setting'
 
 '.luniverse-modal':
-  'tab': 'luniverse-signin:focus-next'
   'escape': 'luniverse:dismiss-panel'

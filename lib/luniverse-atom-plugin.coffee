@@ -44,9 +44,6 @@ module.exports =
     @subscriptions.add atom.commands.add @luniverseCreateContractView.element,
       'luniverse:dismiss-panel', => @luniverseCreateContractView.dismissPanel()
 
-    @subscriptions.add atom.commands.add @luniverseCreateContractView.element,
-      'luniverse-signin:focus-next', => @luniverseCreateContractView.toggleFocus()
-
     atom.workspace.addOpener (uriToOpen) ->
       try
         {protocol, host, pathname} = url.parse(uriToOpen)
@@ -93,6 +90,24 @@ module.exports =
           })
 
   compileContract: ->
+    editor = atom.workspace.getActiveTextEditor()
+    if editor && editor.isModified()
+      atom.confirm({
+        message: editor.getTitle() + ' has changes, do you want to save and compile them?',
+        detail: '',
+        buttons: ['Save and Compile', 'No']
+      },
+      (response) =>
+        if response is 0
+          editor.save()
+          @requestCompile()
+        else
+      )
+    else
+      @requestCompile()
+
+  requestCompile: ->
+    atom.notifications.addInfo('Contract Compile 요청중입니다...')
     helper
       .mergedSourceCode(helper.getUserFilePath())
       .then (sourcecode) =>
@@ -100,8 +115,7 @@ module.exports =
           .then (res) =>
             console.log(res)
             if res.result
-              atom.notifications.addSuccess('Contract Compile 요청이 완료되었습니다!')
-              # projectPath = helper.getUserPath()
+              atom.notifications.addSuccess('Contract Compile이 완료되었습니다!')
               @luniverseCreateContractView.presentPanel res.data
             else
               throw new Error(res.message)
@@ -112,7 +126,6 @@ module.exports =
             })
 
   checkSecurityAssessmentReports: ->
-    console.log('checkSecurityAssessmentReports')
     LuniverseApiClient.securityAssessmentReports 1
       .then (res) =>
         if res.result && res.data.reports
