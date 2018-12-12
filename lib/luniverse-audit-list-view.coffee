@@ -85,7 +85,7 @@ class LuniverseAuditListView extends ScrollView
                 @td '1'
 
           @div class: 'btns', =>
-            @a href: 'https://dev.luniverse.io/utility/security.assessment/report', class: 'button-normal', 'Detail Report'
+            @a href: 'https://dev.luniverse.io/utility/security/assessment/report', class: 'button-normal', 'Detail Report'
 
     @resultsView.append(reportCard)
     return
