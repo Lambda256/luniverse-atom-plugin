@@ -136,20 +136,16 @@ module.exports =
     interval$ = interval(2000)
     interval$
       .pipe(
-        takeWhile((checking) =>
+        takeWhile( ->
           return hasSucceed is false),
-        flatMap((x) =>
+        flatMap( ->
           return from(LuniverseApiClient.getSecurityAssessmentReport(reportId))
             .pipe(
-              catchError((error) =>
-                console.log('catchError')
-                console.log(error)
+              catchError( ->
                 return empty())
             )),
       )
       .subscribe (res) =>
-        console.log('subscription')
-        console.log(res)
         if res.result
           hasSucceed = true
           @showReport res.data.report
