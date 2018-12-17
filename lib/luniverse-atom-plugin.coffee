@@ -1,12 +1,13 @@
+{ Subject } = require 'rxjs'
+{ debounceTime } = require 'rxjs/operators'
 url = require 'url'
-{ Subject, from, empty, interval } = require 'rxjs'
-{ debounceTime, catchError, takeWhile, flatMap } = require 'rxjs/operators'
 
 helper = require './luniverse-helper-functions'
 LuniverseCreateContractView = require './luniverse-create-contract-view'
 LuniverseApiClient = require './luniverse-api-client'
 LuniverseAuditListView = require './luniverse-audit-list-view'
 LuniverseAuditReportView = require './luniverse-audit-report-view'
+LuniverseHelperJs = require './luniverse-helper-js-functions.js'
 
 {CompositeDisposable} = require 'event-kit'
 
@@ -132,23 +133,19 @@ module.exports =
 
   checkSecurityAssessmentReport: (reportId) ->
     atom.notifications.addInfo('Contract에 대한 Security Assessment를 진행중입니다...')
-    hasSucceed = false
-    interval$ = interval(2000)
-    interval$
-      .pipe(
-        takeWhile( ->
-          return hasSucceed is false),
-        flatMap( ->
-          return from(LuniverseApiClient.getSecurityAssessmentReport(reportId))
-            .pipe(
-              catchError( ->
-                return empty())
-            )),
-      )
-      .subscribe (res) =>
-        if res.result
-          hasSucceed = true
+    LuniverseHelperJs
+      .retry(LuniverseApiClient.getSecurityAssessmentReport(reportId))
+      .then (res) =>
+        console.log(res)
+        if res.result && res.data.report
           @showReport res.data.report
+        else
+          throw new Error(res.message)
+      .catch (error) =>
+        atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다', {
+          detail: error.message,
+          dismissable: true
+        })
 
   checkSecurityAssessmentReports: ->
     LuniverseApiClient.securityAssessmentReports 1

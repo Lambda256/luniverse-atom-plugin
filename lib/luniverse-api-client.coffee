@@ -36,7 +36,7 @@ class LuniverseApiClient
     @handleAuthError req
     return req
 
-  @getSecurityAssessmentReport: (reportId) ->
+  @getSecurityAssessmentReport: (reportId) => () =>
     console.log('/common-service/security/assessment/reports/' + reportId)
     options =
       uri: @baseURL + '/common-service/security/assessment/reports/' + reportId
