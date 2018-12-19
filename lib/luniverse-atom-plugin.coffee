@@ -134,14 +134,19 @@ module.exports =
   checkSecurityAssessmentReport: (reportId) ->
     atom.notifications.addInfo('Contract에 대한 Security Assessment를 진행중입니다...')
     LuniverseHelperJs
-      .retry(LuniverseApiClient.getSecurityAssessmentReport(reportId))
+      .retry(LuniverseApiClient.getSecurityAssessmentReport(reportId), (response) =>
+        if (response.result && ['AUDITTED', 'FAILED'].includes(response.data.report.status))
+          return true
+        else
+          return false
+      )
       .then (res) =>
         console.log(res)
         if res.result && res.data.report
           @showReport res.data.report
         else
           throw new Error(res.message)
-      .catch (error) =>
+      .catch (error) ->
         atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다', {
           detail: error.message,
           dismissable: true
