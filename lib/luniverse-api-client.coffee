@@ -36,6 +36,18 @@ class LuniverseApiClient
     @handleAuthError req
     return req
 
+  @getSecurityAssessmentReport: (reportId) => () =>
+    console.log('/common-service/security/assessment/reports/' + reportId)
+    options =
+      uri: @baseURL + '/common-service/security/assessment/reports/' + reportId
+      method: 'GET'
+      headers: {'dbs-auth-token': LuniverseApiClient.token}
+      json: true
+
+    req = rp(options)
+    @handleAuthError req
+    return req
+
   @getChainList: ->
     console.log(@baseURL + '/chains/')
     options =

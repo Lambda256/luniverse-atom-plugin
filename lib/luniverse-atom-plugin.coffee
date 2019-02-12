@@ -1,11 +1,13 @@
-url = require 'url'
 { Subject } = require 'rxjs'
 { debounceTime } = require 'rxjs/operators'
+url = require 'url'
 
 helper = require './luniverse-helper-functions'
 LuniverseCreateContractView = require './luniverse-create-contract-view'
 LuniverseApiClient = require './luniverse-api-client'
 LuniverseAuditListView = require './luniverse-audit-list-view'
+LuniverseAuditReportView = require './luniverse-audit-report-view'
+LuniverseHelperJs = require './luniverse-helper-js-functions.js'
 
 {CompositeDisposable} = require 'event-kit'
 
@@ -58,6 +60,8 @@ module.exports =
 
       if host is 'audit-list'
         return new LuniverseAuditListView()
+      else if host is 'audit-report'
+        return new LuniverseAuditReportView()
 
       return
 
@@ -78,9 +82,11 @@ module.exports =
       totalCode = editor.getText()
       LuniverseApiClient.securityAssessment(editor.getTitle(), 'code', totalCode)
         .then (res) =>
+          console.log('createAudit success')
+          console.log(res)
           if res.result
-            atom.notifications.addSuccess('Luniverse Security Assessment 요청이 완료되었습니다!')
-            @checkSecurityAssessmentReports()
+            # atom.notifications.addSuccess('Luniverse Security Assessment 요청이 완료되었습니다!')
+            @checkSecurityAssessmentReport res.data.reportId
           else
             throw new Error(res.message)
         .catch (error) ->
@@ -125,6 +131,27 @@ module.exports =
               dismissable: true
             })
 
+  checkSecurityAssessmentReport: (reportId) ->
+    atom.notifications.addInfo('Contract에 대한 Security Assessment를 진행중입니다...')
+    LuniverseHelperJs
+      .retry(LuniverseApiClient.getSecurityAssessmentReport(reportId), (response) =>
+        if (response.result && ['AUDITTED', 'FAILED'].includes(response.data.report.status))
+          return true
+        else
+          return false
+      )
+      .then (res) =>
+        console.log(res)
+        if res.result && res.data.report
+          @showReport res.data.report
+        else
+          throw new Error(res.message)
+      .catch (error) ->
+        atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다', {
+          detail: error.message,
+          dismissable: true
+        })
+
   checkSecurityAssessmentReports: ->
     LuniverseApiClient.securityAssessmentReports 1
       .then (res) =>
@@ -137,6 +164,16 @@ module.exports =
           detail: error.message,
           dismissable: true
         })
+
+  showReport: (reportJson) ->
+    console.log('showReport showReport showReport')
+    uri = 'luniverse://audit-report'
+    atom.workspace.open(uri, split: 'right', searchAllPanes: true).then (luniverseAuditReportView) ->
+      if luniverseAuditReportView instanceof LuniverseAuditReportView
+        console.log('renderReport')
+        console.log(reportJson)
+        luniverseAuditReportView.renderReport(reportJson)
+        atom.workspace.activatePreviousPane()
 
   showResults: (reportsJson) ->
     uri = 'luniverse://audit-list'

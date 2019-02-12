@@ -21,8 +21,8 @@
           "label": "Luniverse-Atom-Plugin",
           "submenu": [
             {
-              "label": "Check Security Assessment Reports",
-              "command": "luniverse-api:security-assessment-reports"
+              "label": "Create Audit",
+              "command": "luniverse-api:create-audit"
             },
             {
               "label": "Compile Contract Code",
