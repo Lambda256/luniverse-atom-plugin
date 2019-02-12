@@ -9,7 +9,7 @@ class LuniverseApiClient
   # @baseURL = "http://localhost:8080/api"
 
   @setToken: (token) ->
-    LuniverseApiClient.token = token
+    LuniverseApiClient.token = 'Bearer ' + token
 
   @securityAssessment: (contractName, contentType, code) ->
     console.log(@baseURL + '/common-service/security/assessment')
@@ -17,7 +17,7 @@ class LuniverseApiClient
       uri: @baseURL + '/common-service/security/assessment'
       method: 'POST'
       form: {contractName: contractName, contentType: contentType, code: code}
-      headers: {'Content-Type': 'application/x-www-form-urlencoded', 'dbs-auth-token': LuniverseApiClient.token}
+      headers: {'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': LuniverseApiClient.token}
       json: true
 
     req = rp(options)
@@ -29,7 +29,7 @@ class LuniverseApiClient
     options =
       uri: @baseURL + '/common-service/security/assessment/reports?page=' + page
       method: 'GET'
-      headers: {'dbs-auth-token': LuniverseApiClient.token}
+      headers: {'Authorization': LuniverseApiClient.token}
       json: true
 
     req = rp(options)
@@ -41,7 +41,7 @@ class LuniverseApiClient
     options =
       uri: @baseURL + '/common-service/security/assessment/reports/' + reportId
       method: 'GET'
-      headers: {'dbs-auth-token': LuniverseApiClient.token}
+      headers: {'Authorization': LuniverseApiClient.token}
       json: true
 
     req = rp(options)
@@ -53,7 +53,7 @@ class LuniverseApiClient
     options =
       uri: @baseURL + '/chains/'
       method: 'GET'
-      headers: {'dbs-auth-token': LuniverseApiClient.token}
+      headers: {'Authorization': LuniverseApiClient.token}
       json: true
 
     req = rp(options)
@@ -61,25 +61,32 @@ class LuniverseApiClient
     return req
 
   @compileContract: (sourcecode, chainId = '0') ->
-    console.log(@baseURL + '/chains/' + chainId  + '/contract/files')
+    # console.log(@baseURL + '/chains/' + chainId  + '/contract/files')
+    console.log(@baseURL + '/chain/contract/compile')
+    console.log(sourcecode)
     options =
-      uri: @baseURL + '/chains/' + chainId  + '/contract/files'
+      # uri: @baseURL + '/chains/' + chainId  + '/contract/files'
+      uri: @baseURL + '/chain/contract/compile'
       method: 'POST'
-      form: {sourcecode: sourcecode}
-      headers: {'Content-Type': 'application/x-www-form-urlencoded', 'dbs-auth-token': LuniverseApiClient.token}
+      body: {sourcecode: sourcecode}
+      headers: {'Content-Type': 'application/json', 'Authorization': LuniverseApiClient.token}
       json: true
 
     req = rp(options)
     @handleAuthError req
     return req
 
-  @requestDeploy: (chainId, name, description, contractFileId, contract, params) ->
+  @requestDeploy: (chainId, name, description, filename, sourcecode, compiled, contractName, params) ->
     console.log(@baseURL + '/chains/' + chainId + '/contracts')
+    requestBody = {name: name, description: description, filename: filename, sourcecode: sourcecode, constructorName: contractName, constructorParams: params}
+
+    console.log(requestBody)
+
     options =
       uri: @baseURL + '/chains/' + chainId + '/contracts'
       method: 'POST'
-      form: {chainId: chainId, name: name, description: description, contractFileId: contractFileId, contract: contract, params: JSON.stringify(params)}
-      headers: {'dbs-auth-token': LuniverseApiClient.token}
+      body: requestBody
+      headers: {'Content-Type': 'application/json', 'Authorization': LuniverseApiClient.token}
       json: true
 
     req = rp(options)
