@@ -41,7 +41,7 @@ class LuniverseApiClient
     options =
       uri: @baseURL + '/common-service/security/assessment/reports/' + reportId
       method: 'GET'
-      headers: {'dbs-auth-token': LuniverseApiClient.token}
+      headers: {'Authorization': LuniverseApiClient.token}
       json: true
 
     req = rp(options)
