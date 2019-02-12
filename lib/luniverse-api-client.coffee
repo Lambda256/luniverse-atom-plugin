@@ -9,7 +9,7 @@ class LuniverseApiClient
   # @baseURL = "http://localhost:8080/api"
 
   @setToken: (token) ->
-    LuniverseApiClient.token = 'Bearer' + token
+    LuniverseApiClient.token = 'Bearer ' + token
 
   @securityAssessment: (contractName, contentType, code) ->
     console.log(@baseURL + '/common-service/security/assessment')
