@@ -8,6 +8,8 @@ class LuniverseCreateContractView extends View
   parameterFields: []
   contracts: null
   contractData: null
+  sourcecode: null
+  filename: null
 
   @content: ->
     @aside class: 'layout-atom-popup layout-popup native-key-bindings', =>
@@ -72,14 +74,18 @@ class LuniverseCreateContractView extends View
       contractName = @contractSelector.val()
       name = @nameField.val()
       description = @descriptionField.val()
-      contractFileId = @contractData.contractFile.contractFileId
-      params = []
+      sourcecode = @sourcecode
+      compiled = @contracts
+      filename = @filename
+      # contractFileId = @contractData.contractFile.contractFileId
+      params = {}
 
       parsedABI = @parseABI @contracts[contractName].abi
       parsedABI.forEach (elem) ->
-        params.push {name: elem.name, type: elem.type, val: $('#' + elem.name).val()}
+        params[elem.name] = $('#' + elem.name).val()
+        # params.push {name: elem.name, type: elem.type, val: $('#' + elem.name).val()}
 
-      LuniverseApiClient.requestDeploy chainId, name, description, contractFileId, contractName, params
+      LuniverseApiClient.requestDeploy chainId, name, description, filename, sourcecode, compiled, contractName, params
         .then (res) ->
           if res.result && res.code is 'OK'
             atom.notifications.addSuccess('Contract Deploy 요청이 완료되었습니다!')
@@ -96,9 +102,13 @@ class LuniverseCreateContractView extends View
     @contractSelector.on 'change', (e) =>
       @setConstructorParameters @contracts[$(e.target).val()].abi
 
-  presentPanel: (data) ->
+  presentPanel: (data, sourcecode, filename) ->
     console.log('presentPanel')
     console.log(data)
+    console.log(sourcecode)
+
+    @sourcecode = sourcecode
+    @filename = filename
 
     @parameterFields = []
     @contracts = null
@@ -106,15 +116,16 @@ class LuniverseCreateContractView extends View
     @hideConstructorParameters()
 
     @contractData = data
-    @contracts = data.contractFile.contracts
+    # @contracts = data.contractFile.contracts
+    @contracts = data.compiled
 
     @panel ?= atom.workspace.addModalPanel(item: @, visible: true)
     @panel.show()
     @progressIndicator.show()
 
     @initializeSelectBox @contractSelector, 'Select your compiled contract file'
-    Object.keys(data.contractFile.contracts).forEach (key) =>
-      console.log(key, data.contractFile.contracts[key])
+    Object.keys(data.compiled).forEach (key) =>
+      console.log(key, data.compiled[key])
       @contractSelector.append new Option(key, key)
 
     LuniverseApiClient.getChainList()

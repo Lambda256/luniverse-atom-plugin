@@ -16,6 +16,9 @@ module.exports =
   getUserFilePath: ->
     return atom.workspace.getActivePaneItem().buffer.file.path
 
+  getActiveFileName: ->
+    return atom.workspace.getActiveTextEditor().getTitle()
+
   mergedSourceCode: (filePath) ->
     merger = new Merger({ delimeter: '\n\n' })
     result = merger.processFile(filePath, true)

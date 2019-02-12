@@ -116,7 +116,7 @@ module.exports =
             console.log(res)
             if res.result
               atom.notifications.addSuccess('Contract Compile이 완료되었습니다!')
-              @luniverseCreateContractView.presentPanel res.data
+              @luniverseCreateContractView.presentPanel res.data, sourcecode, helper.getActiveFileName()
             else
               throw new Error(res.message)
           .catch (error) ->
