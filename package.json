@@ -28,7 +28,7 @@
   "configSchema": {
     "accessToken": {
       "title": "Luniverse Access Token",
-      "description": "Visit https://dev.luniverse.io/auth/3rd-party/signin to generate an access token",
+      "description": "Visit https://stg-console.luniverse.io/auth/3rd-party/signin to generate an access token",
       "type": "string",
       "default": "",
       "order": 1
