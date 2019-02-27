@@ -1,6 +1,7 @@
 {$, $$$, View} = require 'atom-space-pen-views'
 
 LuniverseApiClient = require './luniverse-api-client'
+_shell = require 'shell'
 
 module.exports =
 class LuniverseCreateContractView extends View
@@ -88,7 +89,16 @@ class LuniverseCreateContractView extends View
       LuniverseApiClient.requestDeploy chainId, name, description, filename, sourcecode, compiled, contractName, params
         .then (res) ->
           if res.result && res.code is 'OK'
-            atom.notifications.addSuccess('Contract Deploy 요청이 완료되었습니다!')
+            atom.notifications.addSuccess('Contract Deploy 요청이 완료되었습니다!', {
+              buttons: [
+                {
+                  className: 'btn-details'
+                  onDidClick: () ->
+                    _shell.openExternal("https://stg-console.luniverse.io/chains/#{chainId}/contract/list")
+                  text: 'Details'
+                }
+              ]
+              })
           else
             throw new Error(res.message)
         .catch (error) ->
