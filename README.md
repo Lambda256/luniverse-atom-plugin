@@ -1,23 +1,8 @@
 # luniverse-atom-plugin package
 
-A short description of your package.
+[luniverse-atom-plugin User Guide](https://guide.luniverse.io/docs/solidity-ide%EB%A1%9C-%EA%B0%9C%EB%B0%9C-%ED%99%98%EA%B2%BD-%EC%84%B8%ED%8C%85%ED%95%98%EA%B8%B0)
 
-![A screenshot of your package](https://f.cloud.github.com/assets/69169/2290250/c35d867a-a017-11e3-86be-cd7c5bf3ff9b.gif)
-
-## development prerequisites
-
-* npm
-* apm (Install Atom and open it. `Atom > Install Shell Commands`)
-```
-apm -v
-> apm  1.9.2
-> npm  2.13.3
-> node 0.10.40
-> python 2.7.10
-> git 2.7.4
-```
-
-## Testing
+## Test & Contribution
 
 ```
 $ git clone https://github.com/Lambda256/luniverse-atom-plugin.git

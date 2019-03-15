@@ -94,7 +94,7 @@ class LuniverseCreateContractView extends View
                 {
                   className: 'btn-details'
                   onDidClick: () ->
-                    _shell.openExternal("https://stg-console.luniverse.io/chains/#{chainId}/contract/list")
+                    _shell.openExternal("https://beta.luniverse.io/chains/#{chainId}/contract/list")
                   text: 'Details'
                 }
               ]
