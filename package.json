@@ -2,8 +2,8 @@
   "name": "luniverse-atom-plugin",
   "main": "./lib/luniverse-atom-plugin",
   "version": "0.0.0",
-  "description": "A short description of your package",
-  "keywords": [],
+  "description": "Help contract developer to easily use luniverse platform",
+  "keywords": ["luniverse", "solidity", "smart_contract"],
   "repository": "https://github.com/Lambda256/luniverse-atom-plugin",
   "license": "MIT",
   "engines": {

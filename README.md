@@ -1,23 +1,6 @@
 # luniverse-atom-plugin package
 
-A short description of your package.
-
-![A screenshot of your package](https://f.cloud.github.com/assets/69169/2290250/c35d867a-a017-11e3-86be-cd7c5bf3ff9b.gif)
-
-## development prerequisites
-
-* npm
-* apm (Install Atom and open it. `Atom > Install Shell Commands`)
-```
-apm -v
-> apm  1.9.2
-> npm  2.13.3
-> node 0.10.40
-> python 2.7.10
-> git 2.7.4
-```
-
-## Testing
+## Test & Contribution
 
 ```
 $ git clone https://github.com/Lambda256/luniverse-atom-plugin.git
