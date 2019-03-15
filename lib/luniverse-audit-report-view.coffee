@@ -65,7 +65,7 @@ class LuniverseAuditReportView extends ScrollView
                 @td payload['noteCount']
 
           @div class: 'btns', =>
-            @a href: 'https://stg-console.luniverse.io/utility/security/assessment/report/' + reportId + '/project/' + payload['file_name'], class: 'button-normal', 'Detail Report'
+            @a href: 'https://beta.luniverse.io/utility/security/assessment/report/' + reportId + '/project/' + payload['file_name'], class: 'button-normal', 'Detail Report'
 
     @resultsView.append(reportCard)
     return

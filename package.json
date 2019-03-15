@@ -1,7 +1,7 @@
 {
   "name": "luniverse-atom-plugin",
   "main": "./lib/luniverse-atom-plugin",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Help contract developer to easily use luniverse platform",
   "keywords": ["luniverse", "solidity", "smart_contract"],
   "repository": "https://github.com/Lambda256/luniverse-atom-plugin",
@@ -28,7 +28,7 @@
   "configSchema": {
     "accessToken": {
       "title": "Luniverse Access Token",
-      "description": "Visit https://stg-console.luniverse.io/auth/3rd-party/signin to generate an access token",
+      "description": "Visit https://beta.luniverse.io/auth/3rd-party/signin to generate an access token",
       "type": "string",
       "default": "",
       "order": 1
