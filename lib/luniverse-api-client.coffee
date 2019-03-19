@@ -4,7 +4,7 @@ module.exports =
 class LuniverseApiClient
 
   # Properties
-  @baseURL = "https://obt-be.luniverse.io/api"
+  @baseURL = "https://beta-be.luniverse.io/api"
   @TOKEN_ERROR_CODES = ['AUTH_REQUIRED', 'TOKEN_REQUIRED', 'TOKEN_INVALID', 'TOKEN_EXPIRED', 'TOKEN_OUTDATED', 'TOKEN_NOTFOUND']
   # @baseURL = "http://localhost:8080/api"
 
