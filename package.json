@@ -1,7 +1,7 @@
 {
   "name": "luniverse-atom-plugin",
   "main": "./lib/luniverse-atom-plugin",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Help contract developer to easily use luniverse platform",
   "keywords": [
     "luniverse",
