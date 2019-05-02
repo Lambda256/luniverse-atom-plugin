@@ -130,6 +130,11 @@ module.exports =
               detail: error.message,
               dismissable: true
             })
+      .catch (error) =>
+        atom.notifications.addError('Contract Code Merge 중 오류가 발생했습니다', {
+          detail: error.message,
+          dismissable: true
+        })
 
   checkSecurityAssessmentReport: (reportId) ->
     atom.notifications.addInfo('Contract에 대한 Security Assessment를 진행중입니다...')
