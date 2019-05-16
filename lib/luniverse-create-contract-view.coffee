@@ -1,4 +1,5 @@
 {$, $$$, View} = require 'atom-space-pen-views'
+luniverseConfig = require './luniverse-config'
 
 LuniverseApiClient = require './luniverse-api-client'
 _shell = require 'shell'
@@ -94,7 +95,7 @@ class LuniverseCreateContractView extends View
                 {
                   className: 'btn-details'
                   onDidClick: () ->
-                    _shell.openExternal("https://beta.luniverse.io/chains/#{chainId}/contract/list")
+                    _shell.openExternal("#{luniverseConfig.FE_CONSOLE_URL}/chains/#{chainId}/contract/list")
                   text: 'Details'
                 }
               ]

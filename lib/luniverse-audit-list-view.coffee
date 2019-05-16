@@ -1,5 +1,6 @@
 {$, $$$, ScrollView} = require 'atom-space-pen-views'
 LuniverseApiClient = require './luniverse-api-client'
+luniverseConfig = require './luniverse-config'
 
 window.jQuery = $
 require './vendor/bootstrap.min.js'
@@ -85,7 +86,7 @@ class LuniverseAuditListView extends ScrollView
                 @td '1'
 
           @div class: 'btns', =>
-            @a href: 'https://beta.luniverse.io/utility/security/assessment/report', class: 'button-normal', 'Detail Report'
+            @a href: "#{luniverseConfig.FE_CONSOLE_URL}/utility/security/assessment/report", class: 'button-normal', 'Detail Report'
 
     @resultsView.append(reportCard)
     return
