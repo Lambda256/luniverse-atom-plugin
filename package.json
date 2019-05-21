@@ -1,7 +1,7 @@
 {
   "name": "luniverse-atom-plugin",
   "main": "./lib/luniverse-atom-plugin",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Help contract developer to easily use luniverse platform",
   "keywords": [
     "luniverse",
@@ -32,7 +32,7 @@
   "configSchema": {
     "accessToken": {
       "title": "Luniverse Access Token",
-      "description": "Visit https://beta.luniverse.io/auth/3rd-party/signin to generate an access token",
+      "description": "Visit https://console.luniverse.io/auth/3rd-party/signin to generate an access token",
       "type": "string",
       "default": "",
       "order": 1
