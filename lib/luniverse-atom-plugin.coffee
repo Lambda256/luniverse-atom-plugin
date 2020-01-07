@@ -80,18 +80,15 @@ module.exports =
     editor = atom.workspace.getActiveTextEditor()
     if editor
       totalCode = editor.getText()
-      LuniverseApiClient.securityAssessment(editor.getTitle(), 'code', totalCode)
+      LuniverseApiClient.securityAssessment(editor.getTitle(), 'PASTE', totalCode)
         .then (res) =>
           console.log('createAudit success')
           console.log(res)
           if res.result
-            # atom.notifications.addSuccess('Luniverse Security Assessment 요청이 완료되었습니다!')
             @checkSecurityAssessmentReport res.data.reportId
-          else
-            throw new Error(res.message)
         .catch (error) ->
           atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다', {
-            detail: error.message,
+            detail: error.error.message,
             dismissable: true
           })
 
@@ -123,14 +120,12 @@ module.exports =
             if res.result
               atom.notifications.addSuccess('Contract Compile이 완료되었습니다!')
               @luniverseCreateContractView.presentPanel res.data, sourcecode, helper.getActiveFileName()
-            else
-              throw new Error(res.message)
           .catch (error) ->
             atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다', {
-              detail: error.message,
+              detail: error.error.message,
               dismissable: true
             })
-      .catch (error) =>
+      .catch (error) ->
         atom.notifications.addError('Contract Code Merge 중 오류가 발생했습니다', {
           detail: error.message,
           dismissable: true
@@ -139,21 +134,19 @@ module.exports =
   checkSecurityAssessmentReport: (reportId) ->
     atom.notifications.addInfo('Contract에 대한 Security Assessment를 진행중입니다...')
     LuniverseHelperJs
-      .retry(LuniverseApiClient.getSecurityAssessmentReport(reportId), (response) =>
+      .retry(LuniverseApiClient.getSecurityAssessmentReport(reportId), (response) ->
         if (response.result && ['AUDITTED', 'FAILED'].includes(response.data.report.status))
           return true
         else
           return false
-      )
+      , 30, 10000)
       .then (res) =>
         console.log(res)
         if res.result && res.data.report
           @showReport res.data.report
-        else
-          throw new Error(res.message)
       .catch (error) ->
         atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다', {
-          detail: error.message,
+          detail: error.error.message,
           dismissable: true
         })
 
@@ -162,11 +155,9 @@ module.exports =
       .then (res) =>
         if res.result && res.data.reports
           @showResults res.data.reports
-        else
-          throw new Error(res.message)
       .catch (error) ->
         atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다', {
-          detail: error.message,
+          detail: error.error.message,
           dismissable: true
         })
 

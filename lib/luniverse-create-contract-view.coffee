@@ -100,11 +100,9 @@ class LuniverseCreateContractView extends View
                 }
               ]
               })
-          else
-            throw new Error(res.message)
         .catch (error) ->
           atom.notifications.addError('Contract Deploy가 실패했습니다.', {
-            detail: error.message,
+            detail: error.error.message,
             dismissable: true
           })
         .then (res) =>
@@ -148,11 +146,9 @@ class LuniverseCreateContractView extends View
           for chain in res.data.chains
             @chainSelector.append new Option(chain.name, chain.chainId)
           @chainSelector.focus()
-        else
-          throw new Error(res.message)
       .catch (error) ->
         atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다', {
-          detail: error.message,
+          detail: error.error.message,
           dismissable: true
         })
       .then =>
