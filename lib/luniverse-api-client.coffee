@@ -13,9 +13,9 @@ class LuniverseApiClient
     LuniverseApiClient.token = 'Bearer ' + token
 
   @securityAssessment: (contractName, reportType, code) ->
-    console.log(@baseURL + '/common-service/security/assessment')
+    console.log(@baseURL + '/common-service/security/assessment/v2')
     options =
-      uri: @baseURL + '/common-service/security/assessment'
+      uri: @baseURL + '/common-service/security/assessment/v2'
       method: 'POST'
       form: {contractName: contractName, reportType: reportType, code: code}
       headers: {'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': LuniverseApiClient.token}
@@ -23,7 +23,6 @@ class LuniverseApiClient
 
     req = rp(options)
     @handleAuthError req
-
     return req
 
   @securityAssessmentReports: (page, callback) ->

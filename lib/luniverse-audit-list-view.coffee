@@ -100,11 +100,9 @@ class LuniverseAuditListView extends ScrollView
           console.log(res)
           if res.result && res.data.reports
             @renderReports(res.data.reports, true)
-          else
-            throw new Error(res.message)
         .catch (error) ->
           atom.notifications.addError('Luniverse API 통신 중 오류가 발생했습니다', {
-            detail: error.message,
+            detail: error.error.message,
             dismissable: true
           })
         .then =>
