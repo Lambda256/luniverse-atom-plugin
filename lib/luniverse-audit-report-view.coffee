@@ -27,11 +27,11 @@ class LuniverseAuditReportView extends ScrollView
   renderReport: (reportJson) =>
     @reportJson = reportJson
 
-    for payload in reportJson['securityReportPayload']
-      @renderReportCards payload
+    for contract in reportJson.securityReportPayload.contracts
+      @renderReportCards contract
 
-  renderReportCards: (payload) =>
-    title = $('<div/>').html(payload['file_name']).text()
+  renderReportCards: (contract) =>
+    title = $('<div/>').html(contract['file_name']).text()
     # Store the report id.
     reportId = @reportJson['reportId']
     createdAt = @reportJson['createdAt']
@@ -50,8 +50,8 @@ class LuniverseAuditReportView extends ScrollView
             @caption 'Security Level'
             @tbody =>
               @tr =>
-                @th rowspan: '2', class: 'security-level level-' + payload['security_level'].toLowerCase(), =>
-                  @strong payload['security_level']
+                @th rowspan: '2', class: 'security-level level-' + contract['security_level'].toLowerCase(), =>
+                  @strong contract['security_level']
                   @span 'Security Level'
                 @th 'Critical'
                 @th 'High'
@@ -59,14 +59,14 @@ class LuniverseAuditReportView extends ScrollView
                 @th 'Low'
                 @th 'Note'
               @tr =>
-                @td payload['criticalCount']
-                @td payload['highCount']
-                @td payload['mediumCount']
-                @td payload['lowCount']
-                @td payload['noteCount']
+                @td contract['criticalCount']
+                @td contract['highCount']
+                @td contract['mediumCount']
+                @td contract['lowCount']
+                @td contract['noteCount']
 
           @div class: 'btns', =>
-            @a href: "#{luniverseConfig.FE_CONSOLE_URL}/utility/security/assessment/report/" + reportId + '/project/' + payload['file_name'], class: 'button-normal', 'Detail Report'
+            @a href: "#{luniverseConfig.FE_CONSOLE_URL}/utility/security/assessment/report/" + reportId + '/project/' + contract['file_name'], class: 'button-normal', 'Detail Report'
 
     @resultsView.append(reportCard)
     return

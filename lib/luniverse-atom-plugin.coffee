@@ -80,7 +80,7 @@ module.exports =
     editor = atom.workspace.getActiveTextEditor()
     if editor
       totalCode = editor.getText()
-      LuniverseApiClient.securityAssessment(editor.getTitle(), 'code', totalCode)
+      LuniverseApiClient.securityAssessment(editor.getTitle(), 'PASTE', totalCode)
         .then (res) =>
           console.log('createAudit success')
           console.log(res)
@@ -130,7 +130,7 @@ module.exports =
               detail: error.message,
               dismissable: true
             })
-      .catch (error) =>
+      .catch (error) ->
         atom.notifications.addError('Contract Code Merge 중 오류가 발생했습니다', {
           detail: error.message,
           dismissable: true
@@ -139,12 +139,12 @@ module.exports =
   checkSecurityAssessmentReport: (reportId) ->
     atom.notifications.addInfo('Contract에 대한 Security Assessment를 진행중입니다...')
     LuniverseHelperJs
-      .retry(LuniverseApiClient.getSecurityAssessmentReport(reportId), (response) =>
+      .retry(LuniverseApiClient.getSecurityAssessmentReport(reportId), (response) ->
         if (response.result && ['AUDITTED', 'FAILED'].includes(response.data.report.status))
           return true
         else
           return false
-      )
+      , 30, 10000)
       .then (res) =>
         console.log(res)
         if res.result && res.data.report
