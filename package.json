@@ -16,7 +16,7 @@
   "dependencies": {
     "atom-space-pen-views": "^2.0.3",
     "event-kit": "~1.2.0",
-    "highlight.js": "8.x",
+    "highlight.js": "10.x",
     "request": "2.x",
     "request-promise": "^4.2.2",
     "rxjs": "^6.3.3",
