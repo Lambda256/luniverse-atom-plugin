@@ -22,7 +22,7 @@
     "rxjs": "^6.3.3",
     "shelljs": "^0.8.3",
     "sol-merger": "^0.1.2",
-    "underscore": "^1.9.1"
+    "underscore": "^1.12.1"
   },
   "devDependencies": {
     "coffeelint": "^1.0.0",
