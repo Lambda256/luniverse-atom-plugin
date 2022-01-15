@@ -20,7 +20,7 @@
     "request": "2.x",
     "request-promise": "^4.2.2",
     "rxjs": "^6.3.3",
-    "shelljs": "^0.8.3",
+    "shelljs": "^0.8.5",
     "sol-merger": "^0.1.2",
     "underscore": "^1.9.1"
   },
